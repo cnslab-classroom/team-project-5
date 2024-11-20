@@ -39,10 +39,11 @@
 5. **사용 기술 및 도구** (~200자)
 
    개발에 사용할 기술이나 도구에는 Java GUI, 네트워크 통신, HTTP 서버, 데이터베이스가 있다. 클라이언트 인터페이스는 import javax.swing.Jframe;을 사용하여 구현할 것이다. 클라이언트와 서버의 통신은 Socket 클래스를 통해 이루어지고 서버는 MySQL과 같은 외부 데이터베이스를 사용하여 여러 클라이언트가 데이터에 접근할 수 있도록 구성할 것이다. JDBC를 활용해 서버에서 데이터베이스에 접근하여 데이터를 저장하거나 조회할 수 있다. 자바의 HTTPServer 클래스를 활용하여 GET, POST, DELETE와 같은 요청을 처리할 것이다. API명세서를 작성하여 각 기능 별로 API 엔드포인트를 설정하고,  URL에 따라 요청 및 응답 형식을 지정하였다.
-   ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/138d572f-1ddb-4220-88cf-22cbe8f54fd7/d8b7b2de-8d40-4fab-ab80-348c0e8ea0d4/image.png)
-   ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/138d572f-1ddb-4220-88cf-22cbe8f54fd7/ad522039-fa07-4e6e-8490-622e9f49af1d/image.png)
-   ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/138d572f-1ddb-4220-88cf-22cbe8f54fd7/bc852eb3-5017-45e0-8df8-80cf870d5d9b/image.png)
-   ![하루비.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/138d572f-1ddb-4220-88cf-22cbe8f54fd7/66b49ab9-66d3-44c0-a793-2796e3cf5f16/%ED%95%98%EB%A3%A8%EB%B9%84.png)
+![image1](https://github.com/user-attachments/assets/f95840e0-3426-4c64-870f-0c941f975433)
+![image2](https://github.com/user-attachments/assets/39666aec-2538-4d7a-9727-13bd4627ec11)
+![image3](https://github.com/user-attachments/assets/6de0fd7c-023d-41cb-acb5-f95282954874)
+![하루비4](https://github.com/user-attachments/assets/137fb882-932c-4506-b30b-8d65b06b5d4b)
+
 
 6. **기대 효과 및 마무리** (~200자)
 
