@@ -77,7 +77,6 @@ public class ClientMain extends JFrame {
     bottomNavBar.add(profileButton);
 
     // 구성 요소를 JFrame에 추가
-    // 구성 요소를 JFrame에 추가
     add(bottomNavBar, BorderLayout.SOUTH);
 
     setVisible(true);
