@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthLoginResponseDto {
-    private String member_id;
+    private Long member_id;
 }

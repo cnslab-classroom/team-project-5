@@ -14,8 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private String[] possibleAccess = { "api/auth/login",
-                    "/api/error", "/api", "/error", "/auth/**" };
+    private String[] possibleAccess = { "/api/error", "/api", "/error", "/auth/**" };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -29,11 +28,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF 인증 비활성화
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/auth/login")  // 로그인 페이지 경로 설정
-                                .permitAll()
                 )
                 .authorizeHttpRequests(auth ->
                         auth
