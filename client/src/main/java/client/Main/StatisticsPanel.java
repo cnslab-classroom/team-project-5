@@ -1,11 +1,19 @@
-package client;
+package client.Main;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.Random;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import client.Frame;
+
 public class StatisticsPanel extends JPanel {
-    public StatisticsPanel() {
+    public StatisticsPanel(Frame parentFrame) {
         setLayout(new BorderLayout());
 
         // 상단 텍스트
