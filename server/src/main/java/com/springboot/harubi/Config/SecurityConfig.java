@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private String[] possibleAccess = { "/api/error", "/api", "/error", "/auth/**" };
+    private String[] possibleAccess = { "/api/error", "/api", "/error", "/auth/**", "/plan/**" };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
