@@ -1,12 +1,27 @@
 package client;
 
-import javax.swing.*;
-import java.awt.*;
+// 외부 import
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+// 내부 import
+import client.SignIn.SignInPanel;
+import client.SignUp.SignUpPanel;
+
 public class Frame extends JFrame {
-    private JPanel currentPanel; // 현재 패널 참조
+    private JPanel panel; // 현재 패널 참조
 
     public Frame() {
         setTitle("Harubi");
@@ -15,34 +30,34 @@ public class Frame extends JFrame {
         setLayout(new BorderLayout()); // BorderLayout 사용
 
         // 초기 패널 설정
-        currentPanel = createFirstPanel();
-        add(currentPanel, BorderLayout.CENTER);
+        panel = createWelcomePanel(this);
+        add(panel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
     // 첫 화면 패널 생성
-    private JPanel createFirstPanel() {
-        JPanel firstPanel = new JPanel();
-        firstPanel.setLayout(new BoxLayout(firstPanel, BoxLayout.Y_AXIS)); // 수직 정렬
-        firstPanel.setBackground(Color.WHITE);
+    private JPanel createWelcomePanel(Frame parentFrame) {
+        JPanel returnPanel = new JPanel();
+        returnPanel.setLayout(new BoxLayout(returnPanel, BoxLayout.Y_AXIS)); // 수직 정렬
 
-        // 상단 텍스트
+        // 하루비
         JLabel titleLabel = new JLabel("Harubi");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 90)); // 폰트 크기 및 스타일 설정
         titleLabel.setForeground(new Color(0, 102, 255)); // 파란색 텍스트
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // 당신의 기록을 이어가세요.
         JLabel subtitleLabel = new JLabel("Continue Your Story.");
         subtitleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // 이모지 섹션
+        // 이모지
         JLabel emojiLabel = new JLabel("(emojis)");
         emojiLabel.setFont(new Font("Arial", Font.PLAIN, 30)); // 크기 설정
         emojiLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // 버튼 섹션
+        // 회원가입
         JButton signUpButton = new JButton("Sign Up");
         signUpButton.setFont(new Font("Arial", Font.BOLD, 20));
         signUpButton.setBackground(new Color(240, 240, 240)); // 버튼 배경색
@@ -50,6 +65,7 @@ public class Frame extends JFrame {
         signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         signUpButton.setMaximumSize(new Dimension(200, 50)); // 버튼 크기 제한
 
+        // 로그인
         JButton signInButton = new JButton("Sign In");
         signInButton.setFont(new Font("Arial", Font.BOLD, 20));
         signInButton.setBackground(new Color(240, 240, 240)); // 버튼 배경색
@@ -57,45 +73,48 @@ public class Frame extends JFrame {
         signInButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         signInButton.setMaximumSize(new Dimension(200, 50)); // 버튼 크기 제한
 
-        // 버튼 클릭 이벤트
+        // signUpButton 클릭 이벤트
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchToPanel(new SignUpPanel());
-            }
+                switchToPanel(new SignUpPanel(parentFrame));
+            } // SignUpPanel로 전환
         });
 
+        // signInButton 클릭 이벤트
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchToPanel(new SignInPanel());
-            }
+                switchToPanel(new SignInPanel(parentFrame));
+            } // SignInPanel로 전환
         });
 
         // 여백 추가
-        firstPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 상단 여백
-        firstPanel.add(titleLabel); // 상단 텍스트 추가
-        firstPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 간격
-        firstPanel.add(subtitleLabel); // 서브 텍스트 추가
-        firstPanel.add(Box.createRigidArea(new Dimension(0, 30))); // 간격
-        firstPanel.add(emojiLabel); // 이모지 추가
-        firstPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 간격
-        firstPanel.add(signUpButton); // 회원가입 버튼 추가
-        firstPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 간격
-        firstPanel.add(signInButton); // 로그인 버튼 추가
+        returnPanel.add(Box.createRigidArea(new Dimension(0, 50))); // (상단 여백)
+        returnPanel.add(titleLabel);                                             // 하루비
+        returnPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 
+        returnPanel.add(subtitleLabel);                                          // 당신의 기록을 이어가세요.
+        returnPanel.add(Box.createRigidArea(new Dimension(0, 30))); // 
+        returnPanel.add(emojiLabel);                                             // 이모지
+        returnPanel.add(Box.createRigidArea(new Dimension(0, 50))); // 
+        returnPanel.add(signUpButton);                                           // 회원가입 버튼
+        returnPanel.add(Box.createRigidArea(new Dimension(0, 20))); // 
+        returnPanel.add(signInButton);                                           // 로그인 버튼
 
-        return firstPanel;
+        return returnPanel;
     }
 
     // 패널 전환 메서드
-    private void switchToPanel(JPanel newPanel) {
-        remove(currentPanel); // 기존 패널 제거
-        currentPanel = newPanel; // 새로운 패널로 교체
-        add(currentPanel, BorderLayout.CENTER); // 새 패널 추가
-        revalidate(); // 레이아웃 갱신
-        repaint(); // 화면 갱신
+    // !! extends JPanel을 하는 모든 Panel 클래스에서 사용 가능 !!
+    public void switchToPanel(JPanel newPanel) {
+        remove(panel);                             // 기존 패널 제거
+        panel = newPanel;                          // 새로운 패널로 교체
+        add(panel, BorderLayout.CENTER);           // 새 패널 추가
+        revalidate();                              // 레이아웃 갱신
+        repaint();                                 // 화면 갱신
     }
 
+    // 메인 (시작)
     public static void main(String[] args) {
         new Frame();
     }
