@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private String[] possibleAccess = { "/api/auth/signup", "api/auth/login",
+    private String[] possibleAccess = { "api/auth/login",
                     "/api/error", "/api", "/error", "/auth/**" };
 
     @Bean
@@ -26,6 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP Basic 인증 비활성화
+                .csrf(AbstractHttpConfigurer::disable)  // CSRF 인증 비활성화
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )

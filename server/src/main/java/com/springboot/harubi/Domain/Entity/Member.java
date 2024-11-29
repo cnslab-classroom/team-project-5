@@ -1,5 +1,6 @@
 package com.springboot.harubi.Domain.Entity;
 
+import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,4 +62,13 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Star> stars;  // 멤버가 여러 그룹을 즐겨찾기할 수 있음
+
+    public Member(AuthRequestDto authRequestDto) {
+        this.name = authRequestDto.getName();
+        this.sign_id = authRequestDto.getSign_id();
+        this.password = authRequestDto.getPassword();
+        this.nickname = authRequestDto.getNickname();
+        this.email = authRequestDto.getEmail();
+        this.agreed = authRequestDto.isAgreed();
+    }
 }
