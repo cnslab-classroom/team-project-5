@@ -17,7 +17,7 @@ public class Plan {
     @Column(nullable = false)
     private String plan_text;
 
-    @Column (nullable = false)
+    @Column (nullable = false, name = "goal_date")
     private LocalDateTime goal_date;
 
     // Many to One 관계 설정

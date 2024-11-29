@@ -20,7 +20,7 @@ public class Member {
     private String name;
 
     @Column (nullable = false)
-    private String sign_id;
+    private String signId;
 
     @Column (nullable = false)
     private String password;
