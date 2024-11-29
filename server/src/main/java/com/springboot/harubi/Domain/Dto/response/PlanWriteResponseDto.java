@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthLoginResponseDto {
-    private Long member_id;
+public class PlanWriteResponseDto {
+    private Long goal_id;
 }

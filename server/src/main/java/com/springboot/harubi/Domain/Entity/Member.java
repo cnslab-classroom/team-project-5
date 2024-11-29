@@ -1,10 +1,12 @@
 package com.springboot.harubi.Domain.Entity;
 
 import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
+import com.springboot.harubi.Exception.BaseException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class Member {
     private String name;
 
     @Column (nullable = false)
-    private String sign_id;
+    private String signId;
 
     @Column (nullable = false)
     private String password;
@@ -65,10 +67,16 @@ public class Member {
 
     public Member(AuthRequestDto authRequestDto) {
         this.name = authRequestDto.getName();
-        this.sign_id = authRequestDto.getSign_id();
+        this.signId = authRequestDto.getSign_id();
         this.password = authRequestDto.getPassword();
         this.nickname = authRequestDto.getNickname();
         this.email = authRequestDto.getEmail();
         this.agreed = authRequestDto.isAgreed();
+    }
+
+    public void validatePassword(String password) {
+        if (!password.equals(this.password)) {
+            throw new BaseException(HttpStatus.UNAUTHORIZED.value(), "비밀번호 일치하지 않음");
+        }
     }
 }

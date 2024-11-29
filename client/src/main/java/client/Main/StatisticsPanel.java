@@ -1,4 +1,4 @@
-package client;
+package client.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import javax.swing.border.Border;
 
 public class StatisticsPanel extends JPanel {
 
-    public StatisticsPanel() {
+    public StatisticsPanel(Frame parentFrame) {
         setLayout(new BorderLayout(10, 10)); // 패널 간 간격
         setBorder(new EmptyBorder(30, 30, 30, 30)); // 전체 여백 설정
         setBackground(Color.WHITE);
@@ -137,11 +137,4 @@ public class StatisticsPanel extends JPanel {
         return statsPanel;
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("통계 페이지");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 1000);
-        frame.add(new StatisticsPanel());
-        frame.setVisible(true);
-    }
 }

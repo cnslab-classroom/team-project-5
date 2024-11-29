@@ -1,6 +1,7 @@
 package com.springboot.harubi.Service;
 
 import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
+import com.springboot.harubi.Domain.Dto.response.AuthLoginResponseDto;
 import com.springboot.harubi.Domain.Entity.Member;
 import com.springboot.harubi.Exception.BaseException;
 import com.springboot.harubi.Repository.MemberRepository;
@@ -51,5 +52,17 @@ public class MemberService {
 
     private Member convertToMember(AuthRequestDto authRequestDto) {
         return new Member(authRequestDto);
+    }
+
+    @Transactional
+    public AuthLoginResponseDto login(String sign_id, String password) {
+        Member member = getMemberById(sign_id);
+        member.validatePassword(password);
+        return new AuthLoginResponseDto(member.getMember_id());
+    }
+
+    private Member getMemberById(String sign_id) {
+        return memberRepository.findBySignId(sign_id).stream().findFirst()
+                .orElseThrow(()->new BaseException(404, "회원가입 되지 않은 아이디"));
     }
 }
