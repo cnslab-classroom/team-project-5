@@ -5,18 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ClientMain extends JFrame {
+public class ClientMain extends JPanel {
   private JPanel currentPanel;
 
   public ClientMain() {
-    setTitle("Bottom Navigation Bar Example");
-    setSize(1000, 1000);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLayout(new BorderLayout());
-
-    // 초기 화면 설정 (Main 화면)
-    currentPanel = new HomePanel();
-    add(currentPanel, BorderLayout.CENTER);
 
     // 바텀 내비게이션 바
     JPanel bottomNavBar = new JPanel();

@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class First extends JFrame {
+public class Frame extends JFrame {
     private JPanel currentPanel; // 현재 패널 참조
 
-    public First() {
+    public Frame() {
         setTitle("Harubi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 500); // 창 크기 설정
+        setSize(1000, 1000); // 창 크기 설정
         setLayout(new BorderLayout()); // BorderLayout 사용
 
         // 초기 패널 설정
@@ -97,6 +97,6 @@ public class First extends JFrame {
     }
 
     public static void main(String[] args) {
-        new First();
+        new Frame();
     }
 }
