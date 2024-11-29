@@ -9,8 +9,8 @@ public class StatisticsPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // 상단 텍스트
-        JLabel titleLabel = new JLabel("당신의 꾸준한 노력이 빛을 발하고 있어요! ✨", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel titleLabel = new JLabel("당신의 꾸준한 노력이\n빛을 발하고 있어요! ✨", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("paperlogy", Font.BOLD, 20));
         add(titleLabel, BorderLayout.NORTH);
 
         // 중앙 그래프
