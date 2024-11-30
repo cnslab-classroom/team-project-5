@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import client.Frame;
-import client.Main.ClientMain;
 
 public class SignUpPanel extends JPanel {
     public SignUpPanel(Frame parentFrame) {
@@ -24,7 +23,7 @@ public class SignUpPanel extends JPanel {
 
         // 상단 레이블
         JLabel welcomeLabel = new JLabel("Welcome!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 50));
+        welcomeLabel.setFont(new Font("Paperlogy", Font.BOLD, 50));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomeLabel.setForeground(Color.BLACK);
 
@@ -50,7 +49,7 @@ public class SignUpPanel extends JPanel {
 
         // 다음 버튼
         JButton nextButton = new JButton("next");
-        nextButton.setFont(new Font("Arial", Font.BOLD, 16));
+        nextButton.setFont(new Font("Paperlogy", Font.BOLD, 16));
         nextButton.setBackground(new Color(0, 153, 0)); // 초록색 버튼
         nextButton.setForeground(Color.WHITE); // 버튼 텍스트 색상
         nextButton.setFocusPainted(false); // 선택 효과 제거
@@ -73,11 +72,11 @@ public class SignUpPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 30))); // 간격
         add(nextButton); // 다음 버튼 추가
 
-        // 버튼 클릭 이벤트, 다음 넘어갈 페이지가 있는데 아직 안 만들어서 ClientMain()으로 넘어감
+        // 버튼 클릭 이벤트, 약관 동의 패널로 전환
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentFrame.switchToPanel(new ClientMain());
+                parentFrame.switchToPanel(new TCAPanel(parentFrame));
             }
         });
     }
@@ -89,12 +88,12 @@ public class SignUpPanel extends JPanel {
 
         // 텍스트 레이블
         JLabel label = new JLabel(labelText);
-        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        label.setFont(new Font("Paperlogy", Font.PLAIN, 14));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 별표 레이블 (빨간색)
         JLabel asteriskLabel = new JLabel("*");
-        asteriskLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        asteriskLabel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
         asteriskLabel.setForeground(Color.RED);
         asteriskLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -112,7 +111,7 @@ public class SignUpPanel extends JPanel {
         // 입력 필드
         JTextField textField = new JTextField(20);
         textField.setMaximumSize(new Dimension(300, 40));
-        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setFont(new Font("Paperlogy", Font.PLAIN, 14));
 
         // 패널에 레이블과 입력 필드 추가
         panel.add(labelPanel); // 레이블 패널 추가
