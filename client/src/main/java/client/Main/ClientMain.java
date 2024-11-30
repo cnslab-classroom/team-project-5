@@ -27,14 +27,19 @@ public class ClientMain extends JPanel {
     // 버튼 생성
     JButton statisticsButton = new JButton("통계");
     statisticsButton.setPreferredSize(new Dimension(50, 50));
+    statisticsButton.setFont(new Font("paperlogy", Font.BOLD, 20));
     JButton goalButton = new JButton("목표");
     goalButton.setPreferredSize(new Dimension(50, 50));
+    goalButton.setFont(new Font("paperlogy", Font.BOLD, 20));
     JButton homeButton = new JButton("홈");
     homeButton.setPreferredSize(new Dimension(50, 50));
+    homeButton.setFont(new Font("paperlogy", Font.BOLD, 20));
     JButton listButton = new JButton("스터디 목록");
     listButton.setPreferredSize(new Dimension(50, 50));
+    listButton.setFont(new Font("paperlogy", Font.BOLD, 20));
     JButton profileButton = new JButton("프로필");
     profileButton.setPreferredSize(new Dimension(50, 50));
+    profileButton.setFont(new Font("paperlogy", Font.BOLD, 20));
 
     // 버튼 클릭 이벤트 추가
     ActionListener buttonListener = new ActionListener() {
