@@ -83,19 +83,46 @@ public class StatisticsPanel extends JPanel {
     }
 
     private JPanel createGraphPanel() {
-        JPanel graphPanel = new JPanel(new GridLayout(7, 53, 2, 2));
+        JPanel graphPanel = new JPanel(new GridLayout(7, 54, 2, 2)); // 7행 54열
         graphPanel.setBackground(new Color(240, 240, 240));
         Border outerBorder = new LineBorder(Color.GRAY, 2, true);
         Border innerBorder = new EmptyBorder(10, 10, 10, 10);
-        graphPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); // 외곽 테두리
+        graphPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
-        // 그리드 셀 생성
-        for (int i = 0; i < 7 * 53; i++) {
-            JPanel cell = new JPanel();
-            int value = (int) (Math.random() * 100); // 0~100 랜덤 값
-            cell.setBackground(getColorForValue(value));
-            graphPanel.add(cell);
+        // 요일 배열
+        String[] days = { "M", "T", "W", "T", "F", "S", "S" };
+
+        // 그리드 생성
+        for (int row = 0; row < 7; row++) {
+            // 1. 각 행의 첫 번째 셀에 요일 추가
+            JLabel dayLabel = new JLabel(days[row], SwingConstants.CENTER);
+            dayLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+            // 토요일과 일요일 색상 설정
+            if (row == 5) {
+                dayLabel.setForeground(Color.BLUE); // 토요일
+            } else if (row == 6) {
+                dayLabel.setForeground(Color.RED); // 일요일
+            } else {
+                dayLabel.setForeground(Color.BLACK); // 기본 요일
+            }
+
+            graphPanel.add(dayLabel); // 요일 추가
+
+            // 2. 나머지 53개의 셀 추가
+            for (int col = 0; col < 53; col++) {
+                JPanel cell = new JPanel() {
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(2, 2); // 셀 크기 고정
+                    }
+                };
+                int value = (int) (Math.random() * 100); // 0~100 랜덤 값
+                cell.setBackground(getColorForValue(value));
+                graphPanel.add(cell);
+            }
         }
+
         return graphPanel;
     }
 
@@ -105,8 +132,8 @@ public class StatisticsPanel extends JPanel {
     }
 
     private JPanel createStatisticsPanel() {
-        JPanel statsPanel = new JPanel();
-        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        JPanel statsPanel = new JPanel(new BorderLayout());
+        // statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
         statsPanel.setBorder(new EmptyBorder(20, 10, 20, 10)); // 패널 내부 여백
         statsPanel.setBackground(Color.WHITE);
 
@@ -116,7 +143,7 @@ public class StatisticsPanel extends JPanel {
 
         statsTitle.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
         statsTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-        statsPanel.add(statsTitle, BorderLayout.WEST);
+        statsPanel.add(statsTitle, BorderLayout.NORTH);
 
         // 통계 리스트 패널
         JPanel listPanel = new JPanel();
@@ -139,12 +166,12 @@ public class StatisticsPanel extends JPanel {
 
             JLabel progressLabel = new JLabel(progress[i], SwingConstants.RIGHT);
             progressLabel.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-            taskPanel.add(progressLabel, BorderLayout.EAST);
+            taskPanel.add(progressLabel, BorderLayout.CENTER);
 
             listPanel.add(taskPanel);
         }
 
-        statsPanel.add(listPanel);
+        statsPanel.add(listPanel, BorderLayout.CENTER);
         return statsPanel;
     }
 

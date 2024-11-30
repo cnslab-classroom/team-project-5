@@ -68,7 +68,7 @@ public class SignInPanel extends JPanel {
                 // 새로운 프레임 열기
                 JFrame newFrame = new JFrame("Main Window");
                 newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                newFrame.setSize(800, 800);
+                newFrame.setSize(900, 800);
                 newFrame.add(new ClientMain()); // ClientMain 추가
                 newFrame.setVisible(true);
             }
