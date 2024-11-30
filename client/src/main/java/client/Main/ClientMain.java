@@ -6,23 +6,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ClientMain extends JPanel {
+  private JScrollPane scrollPane; // JScrollPane을 필드로 선언
   private JPanel currentPanel;
 
   public ClientMain() {
-
     setLayout(new BorderLayout());
 
     // 초기 화면 설정 (Main 화면)
     currentPanel = new HomePanel();
-    add(currentPanel, BorderLayout.CENTER);
+    scrollPane = new JScrollPane(
+        currentPanel,
+        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    add(scrollPane, BorderLayout.CENTER);
 
     // 바텀 내비게이션 바
     JPanel bottomNavBar = new JPanel();
     bottomNavBar.setLayout(new GridLayout(1, 5));
 
-    // 이미지 로드 (클래스패스 기반)
-    // ImageIcon homeIcon = new
-    // ImageIcon("src/main/resources/images/lgcns_DevOn_그림.png");
+    // 버튼 생성
     JButton statisticsButton = new JButton("통계");
     statisticsButton.setPreferredSize(new Dimension(50, 50));
     JButton goalButton = new JButton("목표");
@@ -35,13 +37,13 @@ public class ClientMain extends JPanel {
     profileButton.setPreferredSize(new Dimension(50, 50));
 
     // 버튼 클릭 이벤트 추가
-    // 버튼 클릭 이벤트 추가
     ActionListener buttonListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // 현재 패널을 제거하고 새로운 패널로 교체
-        remove(currentPanel);
+        // 기존 JScrollPane 제거
+        remove(scrollPane);
 
+        // 새로운 패널 생성
         if (e.getSource() == homeButton) {
           currentPanel = new HomePanel();
         } else if (e.getSource() == goalButton) {
@@ -54,13 +56,22 @@ public class ClientMain extends JPanel {
           currentPanel = new ListPanel();
         }
 
-        // 새로운 패널 추가 및 화면 갱신
-        add(currentPanel, BorderLayout.CENTER);
+        // 새로운 패널을 JScrollPane으로 감싸기
+        scrollPane = new JScrollPane(
+            currentPanel,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // 새로운 JScrollPane 추가
+        add(scrollPane, BorderLayout.CENTER);
+
+        // 화면 갱신
         revalidate();
         repaint();
       }
     };
 
+    // 버튼에 이벤트 리스너 추가
     homeButton.addActionListener(buttonListener);
     profileButton.addActionListener(buttonListener);
     statisticsButton.addActionListener(buttonListener);
@@ -74,7 +85,7 @@ public class ClientMain extends JPanel {
     bottomNavBar.add(listButton);
     bottomNavBar.add(profileButton);
 
-    // 구성 요소를 JFrame에 추가
+    // 네비게이션 바 추가
     add(bottomNavBar, BorderLayout.SOUTH);
 
     setVisible(true);
