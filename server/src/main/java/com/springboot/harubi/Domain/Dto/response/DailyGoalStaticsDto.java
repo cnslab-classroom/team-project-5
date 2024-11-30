@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanResponseDto {
+public class DailyGoalStaticsDto {
     private String goal_text;
-    private boolean goal_status;
+    private int goal_date_achievement;
+    private int goal_whole_date;
+    private double goal_percent;
 }

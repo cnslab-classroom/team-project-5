@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanListResponseDto {
-    private List<PlanReadResponseDto> goal;
+public class PlanStatisticsListResponseDto {
+    private List<PlanStaticsResponseDto> statics;  // 날짜별 통계
+    private List<DailyGoalStaticsDto> daily_statics;  // 목표별 통계
 }

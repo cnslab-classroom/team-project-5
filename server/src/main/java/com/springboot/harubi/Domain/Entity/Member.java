@@ -65,6 +65,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Star> stars;  // 멤버가 여러 그룹을 즐겨찾기할 수 있음
 
+
     public Member(AuthRequestDto authRequestDto) {
         this.name = authRequestDto.getName();
         this.signId = authRequestDto.getSign_id();

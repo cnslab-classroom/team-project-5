@@ -18,7 +18,7 @@ public class Plan {
     private String plan_text;
 
     @Column (nullable = false)
-    private LocalDateTime goal_date;
+    private LocalDateTime plan_date;
 
     // Many to One 관계 설정
     @ManyToOne (fetch = FetchType.LAZY)
