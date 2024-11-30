@@ -77,7 +77,7 @@ public class SignUpPanel extends JPanel {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentFrame.switchToPanel(new ClientMain(parentFrame));
+                parentFrame.switchToPanel(new ClientMain());
             }
         });
     }
@@ -86,18 +86,18 @@ public class SignUpPanel extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
-    
+
         // 텍스트 레이블
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Arial", Font.PLAIN, 14));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         // 별표 레이블 (빨간색)
         JLabel asteriskLabel = new JLabel("*");
         asteriskLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         asteriskLabel.setForeground(Color.RED);
         asteriskLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    
+
         // 레이블을 하나로 결합 (수평 배치)
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new BoxLayout(labelPanel, BoxLayout.X_AXIS));
@@ -108,17 +108,17 @@ public class SignUpPanel extends JPanel {
             labelPanel.add(Box.createRigidArea(new Dimension(2, 0))); // 간격
             labelPanel.add(asteriskLabel); // 별표 추가
         }
-    
+
         // 입력 필드
         JTextField textField = new JTextField(20);
         textField.setMaximumSize(new Dimension(300, 40));
         textField.setFont(new Font("Arial", Font.PLAIN, 14));
-    
+
         // 패널에 레이블과 입력 필드 추가
         panel.add(labelPanel); // 레이블 패널 추가
         panel.add(Box.createRigidArea(new Dimension(0, 5))); // 레이블과 필드 간 간격
         panel.add(textField); // 텍스트 필드 추가
-    
+
         return panel;
-    }    
+    }
 }

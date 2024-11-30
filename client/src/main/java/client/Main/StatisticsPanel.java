@@ -8,7 +8,7 @@ import javax.swing.border.Border;
 
 public class StatisticsPanel extends JPanel {
 
-    public StatisticsPanel(Frame parentFrame) {
+    public StatisticsPanel() {
         setLayout(new BorderLayout(10, 10)); // 패널 간 간격
         setBorder(new EmptyBorder(30, 30, 30, 30)); // 전체 여백 설정
         setBackground(Color.WHITE);
