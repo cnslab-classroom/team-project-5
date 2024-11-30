@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +18,8 @@ public class Plan {
     @Column(nullable = false)
     private String plan_text;
 
-    @Column (nullable = false, name = "goal_date")
-    private LocalDateTime goal_date;
+    @Column (nullable = false, name = "plan_date")
+    private Date plan_date;
 
     // Many to One 관계 설정
     @ManyToOne (fetch = FetchType.LAZY)

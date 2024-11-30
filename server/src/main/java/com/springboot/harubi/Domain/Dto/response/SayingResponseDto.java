@@ -7,13 +7,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SayingResponseDto {
-    private Long saying_id;
     private String saying_text;
     private String saying_speaker;
 
     public static SayingResponseDto fromEntity(Saying saying) {
         return new SayingResponseDto(
-                saying.getSaying_id(),
                 saying.getSaying_text(),
                 saying.getSaying_speaker()
         );
