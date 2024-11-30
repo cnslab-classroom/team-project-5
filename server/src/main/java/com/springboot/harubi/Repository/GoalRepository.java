@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Long> {
-    @Query("SELECT g FROM Goal g WHERE g.member = :member AND DATE(g.goal_start_date) <= CURRENT_DATE AND DATE(g.goal_end_date) >= CURRENT_DATE")
+    @Query("SELECT g FROM Goal g JOIN g.goalDateStatuses gs WHERE gs.goal_date = CURRENT_DATE AND g.member = :member")
     List<Goal> findTodayGoalsByMember(@Param("member") Member member);
+
+    List<Goal> findByMember(Member member);
 }

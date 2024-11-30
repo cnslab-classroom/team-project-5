@@ -1,12 +1,14 @@
 package com.springboot.harubi.Domain.Entity;
 
-import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,11 +27,8 @@ public class Goal {
     @Column (nullable = false)
     private Date goal_end_date;
 
-    @Column (nullable = false)
-    private Date goal_date;
-
-    @Column (nullable = false)
-    private boolean goal_status;
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GoalDateStatus> goalDateStatuses = new ArrayList<>();
 
     // Many to One 관계 설정
     @ManyToOne (fetch = FetchType.LAZY)
@@ -38,8 +37,17 @@ public class Goal {
 
     @PrePersist
     public void prePersist() {
-        if (this.goal_date == null) {
-            this.goal_date = new Date();
+        // goal_start_date 부터 goal_end_date 까지 목표 날짜 상태 추가
+        if (goal_start_date != null && goal_end_date != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(goal_start_date);
+
+            while (!cal.getTime().after(goal_end_date)) {
+                Date currentDate = cal.getTime();
+                GoalDateStatus status = new GoalDateStatus(currentDate, false, this);
+                goalDateStatuses.add(status);
+                cal.add(Calendar.DATE, 1);  // 하루씩 증가
+            }
         }
     }
 
@@ -47,8 +55,6 @@ public class Goal {
         this.goal_text = planWriteRequestDto.getGoal_text();
         this.goal_start_date = planWriteRequestDto.getGoal_start_date();
         this.goal_end_date = planWriteRequestDto.getGoal_end_date();
-        this.goal_date = new Date();
-        this.goal_status = false;
         this.member = member;
     }
 }

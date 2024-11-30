@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class PlanStatisticsListResponseDto {
     private List<PlanStaticsResponseDto> statics;  // 날짜별 통계
-    private List<DailyGoalStaticsDto> dailyStatics;  // 목표별 통계
+    private List<DailyGoalStaticsDto> daily_statics;  // 목표별 통계
 }

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanResponseDto {
-    private String goal_text;
-    private boolean goal_status;
+public class PlanCheckResponseDto {
+    private Long plan_status_id;
 }
