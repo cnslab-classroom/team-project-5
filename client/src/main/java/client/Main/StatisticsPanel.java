@@ -63,9 +63,10 @@ public class StatisticsPanel extends JPanel {
         labelMin.setAlignmentX(Component.CENTER_ALIGNMENT);
         legendPanel.add(labelMin);
 
+        // 0~100 사이의 값으로 점점 진한 초록색 생성
         for (int i = 0; i <= 100; i += 25) {
             JPanel colorPanel = new JPanel();
-            colorPanel.setBackground(getColorForValue(i));
+            colorPanel.setBackground(getColorForValue(i)); // 각 단계에 해당하는 색상
             colorPanel.setPreferredSize(new Dimension(10, 20));
             legendPanel.add(colorPanel);
         }
@@ -131,7 +132,7 @@ public class StatisticsPanel extends JPanel {
     }
 
     private Color getColorForValue(int value) {
-        int greenIntensity = (int) (255 * (value / 100.0)); // 0에서 255로 변환
+        int greenIntensity = Math.min((int) (255 * ((100.0 - value) / 100.0)), 255);
         return new Color(0, greenIntensity, 0); // 초록색 톤
     }
 
@@ -190,15 +191,16 @@ public class StatisticsPanel extends JPanel {
             int total = (int) item.get("goal_whole_date");
             double percent = (double) item.get("goal_percent");
 
-            JCheckBox checkBox = new JCheckBox(goalText);
+            JLabel checkBox = new JLabel(goalText);
             checkBox.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             taskPanel.add(checkBox, BorderLayout.WEST);
 
             // 목표 진행률 텍스트 생성
+            int greenIntensity = Math.min((int) (255 * ((100 - percent) / 100.0)), 255); // percent 값에 따른 색상
             String progressText = String.format("(%d/%d) <span style='color: rgb(0,%d,0);'>%.1f%%</span>",
                     achieved,
                     total,
-                    (int) (255 * (percent / 100.0)), // percent 값에 따른 색상
+                    greenIntensity, // 동적으로 계산한 초록색 강도
                     percent);
 
             // HTML을 사용해 JLabel 생성
