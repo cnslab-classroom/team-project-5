@@ -21,7 +21,7 @@ public class HomeController {
      * @param memberId 회원 ID
      * @return HomeResponseDto
      */
-    @GetMapping
+    @GetMapping("{memberId}")
     public ResponseEntity<HomeResponseDto> getHomeData(@RequestParam Long memberId, @RequestParam Long studyGroupId) {
         HomeResponseDto homeData = homeService.getHomeData(memberId, studyGroupId);
         return ResponseEntity.ok(homeData);
