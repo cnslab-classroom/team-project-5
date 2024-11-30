@@ -3,6 +3,7 @@ package com.springboot.harubi.Controller;
 import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
 import com.springboot.harubi.Domain.Dto.response.PlanListResponseDto;
+import com.springboot.harubi.Domain.Dto.response.PlanStaticsResponseDto;
 import com.springboot.harubi.Domain.Dto.response.PlanWriteResponseDto;
 import com.springboot.harubi.Service.PlanService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class PlanController {
     @GetMapping("{member_id}/daily")
     public BaseResponse<PlanListResponseDto> readTodayPlan(@PathVariable("member_id") Long member_id) {
         PlanListResponseDto response = planService.getTodayPlans(member_id);
+        return new BaseResponse<>(HttpStatus.OK.value(), null, response);
+    }
+
+    @GetMapping("{member_id}/statics")
+    public BaseResponse<PlanStaticsResponseDto> staticsPlan(@PathVariable("member_id") Long member_id) {
+        PlanStaticsResponseDto response = planService.watchStatics(member_id);
         return new BaseResponse<>(HttpStatus.OK.value(), null, response);
     }
 }
