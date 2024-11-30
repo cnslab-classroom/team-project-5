@@ -1,5 +1,7 @@
 package com.springboot.harubi.Domain.Entity;
 
+import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
+import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,4 +50,10 @@ public class Goal {
         }
     }
 
+    public Goal(PlanWriteRequestDto planWriteRequestDto, Member member) {
+        this.goal_text = planWriteRequestDto.getGoal_text();
+        this.goal_start_date = planWriteRequestDto.getGoal_start_date();
+        this.goal_end_date = planWriteRequestDto.getGoal_end_date();
+        this.member = member;
+    }
 }

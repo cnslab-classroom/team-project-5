@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthLoginResponseDto {
-    private Long member_id;
+public class PlanListResponseDto {
+    private List<PlanReadResponseDto> goal;
 }

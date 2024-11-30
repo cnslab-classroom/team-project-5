@@ -26,8 +26,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP Basic 인증 비활성화
+                .csrf(AbstractHttpConfigurer::disable)  // CSRF 인증 비활성화
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/auth/login")  // 로그인 페이지 경로 설정
+                                .permitAll()
                 )
                 .authorizeHttpRequests(auth ->
                         auth

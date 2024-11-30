@@ -19,5 +19,6 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
 
     @Query("SELECT g FROM Goal g WHERE g.member = :member AND :today BETWEEN g.goal_start_date AND g.goal_end_date")
     Page<Goal> findByMemberAndDateRange(@Param("member") Member member, @Param("today") Date today, Pageable pageable);
+    @Query("SELECT g FROM Goal g WHERE g.member = :member AND DATE(g.goal_start_date) <= CURRENT_DATE AND DATE(g.goal_end_date) >= CURRENT_DATE")
+    List<Goal> findTodayGoalsByMember(@Param("member") Member member);
 }
-

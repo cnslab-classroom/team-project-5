@@ -1,8 +1,17 @@
-package client;
+package client.Main;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
-import java.awt.*;
 
 public class HomePanel extends JPanel {
     public HomePanel() {
@@ -15,12 +24,12 @@ public class HomePanel extends JPanel {
 
         // 메인 텍스트 (왼쪽 정렬)
         JLabel HomeLabel = new JLabel("<html>오늘도 빛나는 하루입니다, <span style='color:blue;'>버밀리언님!<br>무엇을 먼저 시작해볼까요?</html>");
-        HomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        HomeLabel.setFont(new Font("Paperlogy", Font.BOLD, 20));
         HomeLabel.setAlignmentX(LEFT_ALIGNMENT); // 왼쪽 정렬
 
         // 명언 텍스트 (왼쪽 정렬)
         JLabel HomeQuote = new JLabel("<html>“Shoot for the moon. Even if you miss, you'll land among the stars.”<br>— Norman Vincent Peale</html>");
-        HomeQuote.setFont(new Font("Arial", Font.ITALIC, 11));
+        HomeQuote.setFont(new Font("Paperlogy", Font.ITALIC, 11));
         HomeQuote.setBorder(new LineBorder(Color.GRAY, 2, true)); // 테두리 추가
         HomeQuote.setBackground(new Color(240, 240, 240)); // 배경색 설정
         HomeQuote.setOpaque(true); // 배경색 활성화
@@ -40,7 +49,7 @@ public class HomePanel extends JPanel {
 
         // 목표 섹션
         JLabel goalTitle = new JLabel("<html><b>계획한 대로 차근차근,<br>오늘의 <span style='color:green;'>목표들</span>을 확인해보세요! ✅</b></html>");
-        goalTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        goalTitle.setFont(new Font("Paperlogy", Font.BOLD, 20));
         goalTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel goalBox = new JPanel();
@@ -62,7 +71,7 @@ public class HomePanel extends JPanel {
 
         // 일정 섹션
         JLabel scheduleTitle = new JLabel("<html><b>다가오는 <span style='color:blue;'>일정들</span>을 확인해보세요.<br>중요한 시간을 놓치지 마세요! ⏰</b></html>");
-        scheduleTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        scheduleTitle.setFont(new Font("Paperlogy", Font.BOLD, 20));
         scheduleTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel scheduleBox = new JPanel();
@@ -81,7 +90,7 @@ public class HomePanel extends JPanel {
 
         // 학습 목표 섹션
         JLabel studyTitle = new JLabel("<html><b>시험기간도 하루비와 함께라면 오케이!<br>친구들과 함께 <span style='color:red;'>학습 목표</span>를 설정해봐요! 💯</b></html>");
-        studyTitle.setFont(new Font("Arial", Font.BOLD, 20));
+        studyTitle.setFont(new Font("Paperlogy", Font.BOLD, 20));
         studyTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel studyBox = new JPanel();
