@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-// 내부 import
 import client.SignIn.SignInPanel;
 import client.SignUp.SignUpPanel;
 
@@ -43,23 +42,23 @@ public class Frame extends JFrame {
 
         // 하루비
         JLabel titleLabel = new JLabel("Harubi");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 90)); // 폰트 크기 및 스타일 설정
+        titleLabel.setFont(new Font("Paperlogy", Font.BOLD, 90)); // 폰트 크기 및 스타일 설정
         titleLabel.setForeground(new Color(0, 102, 255)); // 파란색 텍스트
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 당신의 기록을 이어가세요.
         JLabel subtitleLabel = new JLabel("Continue Your Story.");
-        subtitleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        subtitleLabel.setFont(new Font("Paperlogy", Font.BOLD, 20));
         subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 이모지
         JLabel emojiLabel = new JLabel("(emojis)");
-        emojiLabel.setFont(new Font("Arial", Font.PLAIN, 30)); // 크기 설정
+        emojiLabel.setFont(new Font("Paperlogy", Font.PLAIN, 30)); // 크기 설정
         emojiLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 회원가입
         JButton signUpButton = new JButton("Sign Up");
-        signUpButton.setFont(new Font("Arial", Font.BOLD, 20));
+        signUpButton.setFont(new Font("Paperlogy", Font.BOLD, 20));
         signUpButton.setBackground(new Color(240, 240, 240)); // 버튼 배경색
         signUpButton.setFocusPainted(false); // 버튼 선택 효과 제거
         signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -67,7 +66,7 @@ public class Frame extends JFrame {
 
         // 로그인
         JButton signInButton = new JButton("Sign In");
-        signInButton.setFont(new Font("Arial", Font.BOLD, 20));
+        signInButton.setFont(new Font("Paperlogy", Font.BOLD, 20));
         signInButton.setBackground(new Color(240, 240, 240)); // 버튼 배경색
         signInButton.setFocusPainted(false); // 버튼 선택 효과 제거
         signInButton.setAlignmentX(Component.CENTER_ALIGNMENT);

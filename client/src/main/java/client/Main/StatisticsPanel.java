@@ -1,10 +1,21 @@
 package client.Main;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.Border;
 
 public class StatisticsPanel extends JPanel {
 
@@ -123,11 +134,11 @@ public class StatisticsPanel extends JPanel {
             taskPanel.setBackground(new Color(240, 240, 240));
 
             JCheckBox checkBox = new JCheckBox(tasks[i]);
-            checkBox.setFont(new Font("Arial", Font.PLAIN, 15));
+            checkBox.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             taskPanel.add(checkBox, BorderLayout.WEST);
 
             JLabel progressLabel = new JLabel(progress[i], SwingConstants.RIGHT);
-            progressLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+            progressLabel.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             taskPanel.add(progressLabel, BorderLayout.EAST);
 
             listPanel.add(taskPanel);

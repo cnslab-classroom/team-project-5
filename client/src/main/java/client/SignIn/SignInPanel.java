@@ -26,7 +26,7 @@ public class SignInPanel extends JPanel {
 
         // 상단 레이블
         JLabel welcomeLabel = new JLabel("Welcome Back!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        welcomeLabel.setFont(new Font("Paperlogy", Font.BOLD, 20));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         welcomeLabel.setForeground(Color.BLACK); // 텍스트 색상
 
@@ -40,7 +40,7 @@ public class SignInPanel extends JPanel {
 
         // 다음 버튼
         JButton nextButton = new JButton("Next");
-        nextButton.setFont(new Font("Arial", Font.BOLD, 16));
+        nextButton.setFont(new Font("Paperlogy", Font.BOLD, 16));
         nextButton.setBackground(new Color(0, 153, 0)); // 초록색 버튼
         nextButton.setForeground(Color.WHITE); // 버튼 텍스트 색상
         nextButton.setFocusPainted(false); // 선택 효과 제거
@@ -82,14 +82,14 @@ public class SignInPanel extends JPanel {
 
         // 텍스트 레이블
         JLabel label = new JLabel(labelText + (isRequired ? " *" : ""));
-        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        label.setFont(new Font("Paperlogy", Font.PLAIN, 14));
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         label.setForeground(isRequired ? Color.RED : Color.BLACK); // 필수 필드일 경우 빨간색
 
         // 입력 필드
         JTextField textField = new JTextField(20);
         textField.setMaximumSize(new Dimension(300, 40));
-        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setFont(new Font("Paperlogy", Font.PLAIN, 14));
 
         // 패널에 레이블과 입력 필드 추가
         panel.add(label); // 레이블 추가
