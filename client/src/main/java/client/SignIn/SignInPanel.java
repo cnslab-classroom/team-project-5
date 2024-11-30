@@ -1,5 +1,7 @@
 package client.SignIn;
 
+import javax.swing.JFrame;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -56,11 +58,19 @@ public class SignInPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 30))); // 간격
         add(nextButton); // 다음 버튼 추가
 
-        // 버튼 클릭 이벤트: ClientMain으로 전환
+        // 버튼 클릭 이벤트: 새로운 프레임(ClientMain) 열기
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentFrame.switchToPanel(new ClientMain(parentFrame));
+                // 현재 프레임 닫기
+                parentFrame.dispose();
+
+                // 새로운 프레임 열기
+                JFrame newFrame = new JFrame("Main Window");
+                newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                newFrame.setSize(800, 600);
+                newFrame.add(new ClientMain()); // ClientMain 추가
+                newFrame.setVisible(true);
             }
         });
     }
