@@ -183,7 +183,7 @@ public class PlanService {
         Date endDate = calendar.getTime();
 
         // 주의 시작일(월요일) 설정
-        calendar.add(Calendar.WEEK_OF_YEAR, -5); // -52로 바꿔야 53주로 설정
+        calendar.add(Calendar.WEEK_OF_YEAR, -52); // -52로 바꿔야 53주로 설정
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
