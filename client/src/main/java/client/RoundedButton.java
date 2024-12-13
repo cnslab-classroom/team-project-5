@@ -1,5 +1,6 @@
 package client;
 
+// java.awt.event 에서 mouseHandler 사용
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
