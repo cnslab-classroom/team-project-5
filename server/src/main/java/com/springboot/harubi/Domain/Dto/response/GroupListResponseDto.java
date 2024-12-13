@@ -10,5 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupListResponseDto {
-    private List<String> study_group;  // 스터디 그룹 이름 목록
+    private List<GroupInfo> study_group;  // 스터디 그룹 이름 목록
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GroupInfo {
+        private String study_group_name;
+        private String study_emoji;
+    }
 }
