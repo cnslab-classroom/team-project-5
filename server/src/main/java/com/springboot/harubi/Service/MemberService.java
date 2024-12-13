@@ -51,7 +51,7 @@ public class MemberService {
     }
 
     private Member convertToMember(AuthRequestDto authRequestDto) {
-        return new Member(authRequestDto);
+        return new Member(authRequestDto, "😆");
     }
 
     @Transactional

@@ -41,7 +41,7 @@ public class Member {
     @Column
     private Integer status;
 
-    @Column
+    @Column (nullable = false)
     private String icon;
 
     @Column
@@ -67,13 +67,14 @@ public class Member {
     private List<Star> stars;  // 멤버가 여러 그룹을 즐겨찾기할 수 있음
 
 
-    public Member(AuthRequestDto authRequestDto) {
+    public Member(AuthRequestDto authRequestDto, String icon) {
         this.name = authRequestDto.getName();
         this.signId = authRequestDto.getSign_id();
         this.password = authRequestDto.getPassword();
         this.nickname = authRequestDto.getNickname();
         this.email = authRequestDto.getEmail();
         this.agreed = authRequestDto.isAgreed();
+        this.icon = icon;
     }
 
     public void validatePassword(String password) {
