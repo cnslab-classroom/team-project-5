@@ -49,6 +49,9 @@ public class ListPanel extends JPanel {
     createButton.setHorizontalAlignment(SwingConstants.CENTER); // 오른쪽 정렬
     titlePanel.add(createButton, BorderLayout.EAST);
 
+    // 스터디 추가 Dialog
+    createButton.addActionListener(e -> showInputDialog("스터디 추가", "추가할 스터디를 입력하세요:"));
+
     studyListPanel.add(titlePanel, BorderLayout.NORTH);
 
     JPanel ListPanel = new JPanel();
@@ -134,6 +137,8 @@ public class ListPanel extends JPanel {
     goalButton.setFont(new Font("paperlogy", Font.PLAIN, 16));
     goalLabelPanel.add(goalButton, BorderLayout.EAST);
 
+    goalButton.addActionListener(e -> showGoalInputDialog());
+
     goalPanel.add(goalLabelPanel, BorderLayout.NORTH);
 
     JPanel goalListPanel = new JPanel();
@@ -181,6 +186,8 @@ public class ListPanel extends JPanel {
     memberButton.setFont(new Font("paperlogy", Font.PLAIN, 16));
     memberLabelPanel.add(memberButton, BorderLayout.EAST);
 
+    memberButton.addActionListener(e -> showMemberInputDialog());
+
     memberPanel.add(memberLabelPanel, BorderLayout.NORTH);
 
     JPanel memberListPanel = new JPanel();
@@ -227,6 +234,8 @@ public class ListPanel extends JPanel {
     JButton referenceButton = new JButton("+");
     referenceButton.setFont(new Font("paperlogy", Font.PLAIN, 16));
     referenceLabelPanel.add(referenceButton, BorderLayout.EAST);
+
+    referenceButton.addActionListener(e -> showReferenceInputDialog());
 
     referencePanel.add(referenceLabelPanel, BorderLayout.NORTH);
 
@@ -284,6 +293,40 @@ public class ListPanel extends JPanel {
     } catch (Exception e) {
       e.printStackTrace();
       JOptionPane.showMessageDialog(this, "Failed to open the link: " + url);
+    }
+  }
+
+  // 목표 추가 Dialog
+  private void showGoalInputDialog() {
+    String input = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
+    if (input != null && !input.trim().isEmpty()) {
+      JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + input);
+    }
+  }
+
+  // 멤버 추가 Dialog
+  private void showMemberInputDialog() {
+    String input = JOptionPane.showInputDialog(this, "추가할 멤버를 입력하세요:", "멤버 추가", JOptionPane.PLAIN_MESSAGE);
+    if (input != null && !input.trim().isEmpty()) {
+      JOptionPane.showMessageDialog(this, "멤버가 추가되었습니다: " + input);
+    }
+  }
+
+  // 레퍼런스 추가 Dialog
+  private void showReferenceInputDialog() {
+    String input = JOptionPane.showInputDialog(this, "추가할 레퍼런스를 입력하세요 (이름,링크):", "레퍼런스 추가", JOptionPane.PLAIN_MESSAGE);
+    if (input != null && input.contains(",")) {
+      JOptionPane.showMessageDialog(this, "레퍼런스가 추가되었습니다: " + input);
+    } else {
+      JOptionPane.showMessageDialog(this, "올바른 형식으로 입력해주세요. 예: 이름,링크", "입력 오류", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  // 공통 Dialog
+  private void showInputDialog(String title, String message) {
+    String input = JOptionPane.showInputDialog(this, message, title, JOptionPane.PLAIN_MESSAGE);
+    if (input != null && !input.trim().isEmpty()) {
+      JOptionPane.showMessageDialog(this, title + ": " + input);
     }
   }
 
