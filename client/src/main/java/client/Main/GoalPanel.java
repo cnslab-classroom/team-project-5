@@ -1,27 +1,32 @@
 package client.Main;
 
+// 외부 import
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 public class GoalPanel extends JPanel {
     public GoalPanel() {
         // 패널 설정
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.LIGHT_GRAY);
+        setBackground(Color.WHITE);
 
         add(Box.createRigidArea(new Dimension(0, 10)));
 
         // 상단 제목 텍스트
         JLabel titleLabel = new JLabel("오늘의 목표를 100% 달성했어요.");
-        titleLabel.setFont(new Font("Paperlogy", Font.BOLD, 16));
+        titleLabel.setFont(new Font("Paperlogy", Font.BOLD, 24));
         titleLabel.setForeground(new Color(0, 128, 0)); // 초록색 텍스트
         titleLabel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
         add(titleLabel);
@@ -30,7 +35,7 @@ public class GoalPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 10)));
 
         JLabel subLabel = new JLabel("완벽하네요! 💯");
-        subLabel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
+        subLabel.setFont(new Font("Paperlogy", Font.PLAIN, 20));
         subLabel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
         add(subLabel);
 
@@ -39,13 +44,14 @@ public class GoalPanel extends JPanel {
 
         // 체크리스트와 플러스 버튼을 포함하는 패널 생성
         JPanel checklistContainer = new JPanel();
-        checklistContainer.setBackground(Color.WHITE);
         checklistContainer.setLayout(new BoxLayout(checklistContainer, BoxLayout.Y_AXIS)); // 세로 정렬
+        checklistContainer.setBackground(new Color(240, 240, 240));
+        checklistContainer.setBorder(new LineBorder(Color.GRAY, 2, true)); // 테두리 추가
 
         // 체크리스트와 버튼을 포함하는 상단 패널
         JPanel topPanel = new JPanel();
-        topPanel.setBackground(Color.WHITE);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS)); // 수평 정렬
+        topPanel.setBackground(new Color(240, 240, 240));
 
         // 상단 버튼 생성
         JButton addButton = new JButton("+");
@@ -67,10 +73,18 @@ public class GoalPanel extends JPanel {
 
         // 체크리스트 패널 생성
         JPanel checklistPanel = new JPanel();
-        checklistPanel.setBackground(Color.WHITE);
+        checklistPanel.setBackground(new Color(240, 240, 240));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
 
-        // 체크박스 항목 생성
+        // 버튼 클릭 이벤트, 약관 동의 패널로 전환
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showGoalInputDialog();
+            }
+        });
+        
+        // 체크박스 항목 생성 (임시)
         JCheckBox checkBox1 = createCheckBox("1일 1백준 📄");
         JCheckBox checkBox2 = createCheckBox("신나는 방 청소 ✨");
         JCheckBox checkBox3 = createCheckBox("기초영작문 노트정리 📝");
@@ -105,7 +119,14 @@ public class GoalPanel extends JPanel {
         checkBox.setSelected(false);
         checkBox.setEnabled(true);
         checkBox.setFont(new Font("Paperlogy", Font.PLAIN, 14));
-        checkBox.setBackground(Color.WHITE);
         return checkBox;
+    }
+
+    // 목표 추가 Dialog
+    private void showGoalInputDialog() {
+        String input = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
+        if (input != null && !input.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + input);
+        }
     }
 }
