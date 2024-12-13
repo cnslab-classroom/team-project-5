@@ -12,21 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/profile")
+@RequestMapping("/plan")
 @RequiredArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
     private final StreakService streakService;
 
-    // 프로필 및 스트릭 조회
-    @GetMapping("/{memberId}")
+    // 프로필 조회
+    @GetMapping("/{memberId}/profile")
     public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long memberId) {
         ProfileResponseDto profile = profileService.getProfile(memberId);
         return ResponseEntity.ok(profile);
     }
 
     // 프로필 수정
-    @PutMapping("/{memberId}")
+    @PutMapping("/{memberId}/profile_edit")
     public ResponseEntity<String> updateProfile(@PathVariable Long memberId, @RequestBody ProfileUpdateRequestDto request) {
         profileService.updateProfile(memberId, request);
         return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다.");
