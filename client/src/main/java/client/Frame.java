@@ -84,7 +84,7 @@ public class Frame extends JFrame {
         returnPanel.add(subtitleLabel);                           // 부제목
         returnPanel.add(emojiLabel);                              // 이모지
         returnPanel.add(signUpButton);                            // 회원가입 버튼
-        returnPanel.add(signInButton);                            // 로그인 버튼
+        returnPanel.add(signInButton);     
 
         // 가운데 정렬을 위한 Glue 추가
         mainContainer.add(Box.createVerticalGlue());
