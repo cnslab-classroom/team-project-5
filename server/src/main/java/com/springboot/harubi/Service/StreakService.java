@@ -29,7 +29,7 @@ public class StreakService {
     @Transactional
     public int updateStreak(Long memberId) {
         // 오늘 날짜의 GoalDateStatus를 확인
-        List<GoalDateStatus> todayStatuses = goalDateStatusRepository.findByMemberIdAndGoalDate(memberId, LocalDate.now());
+        List<GoalDateStatus> todayStatuses = goalDateStatusRepository.findStatusesByMemberAndDate(memberId, LocalDate.now());
 
         // 오늘 목표가 없는 경우 스트릭 초기화
         if (todayStatuses.isEmpty()) {
