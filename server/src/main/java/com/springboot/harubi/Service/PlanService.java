@@ -1,13 +1,10 @@
 package com.springboot.harubi.Service;
 
-import com.springboot.harubi.Domain.Dto.request.PlanCheckRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
 import com.springboot.harubi.Domain.Dto.response.*;
 import com.springboot.harubi.Domain.Entity.Goal;
-import com.springboot.harubi.Domain.Entity.GoalDateStatus;
 import com.springboot.harubi.Domain.Entity.Member;
 import com.springboot.harubi.Exception.BaseException;
-import com.springboot.harubi.Repository.GoalDateStatusRepository;
 import com.springboot.harubi.Repository.GoalRepository;
 import com.springboot.harubi.Repository.MemberRepository;
 import com.springboot.harubi.Repository.PlanRepository;
