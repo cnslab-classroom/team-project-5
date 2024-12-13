@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
+@Table(name = "goal_date_status")
 public class GoalDateStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +25,17 @@ public class GoalDateStatus {
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
-    public GoalDateStatus(Date goal_date, boolean goal_status, Goal goal) {
+    @ManyToOne(fetch = FetchType.LAZY) // Member와의 관계 매핑
+    @JoinColumn(name = "member_id", nullable = false) // 실제 DB의 member_id와 매핑
+    private Member member;
+
+    public GoalDateStatus(Date goal_date, boolean goal_status, Goal goal, Member member) {
         this.goal_date = goal_date;
         this.goal_status = goal_status;
         this.goal = goal;
+        this.member = member;
+    }
+
+    public GoalDateStatus(Date time, boolean b, Goal goal) {
     }
 }

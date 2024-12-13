@@ -1,6 +1,7 @@
 package com.springboot.harubi.Repository;
 
 import com.springboot.harubi.Domain.Entity.Goal;
+import com.springboot.harubi.Domain.Entity.GoalDateStatus;
 import com.springboot.harubi.Domain.Entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
