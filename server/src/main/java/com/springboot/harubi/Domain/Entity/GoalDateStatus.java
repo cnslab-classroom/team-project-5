@@ -24,6 +24,10 @@ public class GoalDateStatus {
     @Column(nullable = false)
     private boolean goal_status = false;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal goal;

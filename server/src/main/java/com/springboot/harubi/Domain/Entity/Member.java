@@ -66,6 +66,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Star> stars;  // 멤버가 여러 그룹을 즐겨찾기할 수 있음
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GoalDateStatus> goalDateStatuses = new ArrayList<>();
+
 
     public Member(AuthRequestDto authRequestDto) {
         this.name = authRequestDto.getName();

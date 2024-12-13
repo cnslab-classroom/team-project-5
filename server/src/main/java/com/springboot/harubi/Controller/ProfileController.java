@@ -20,9 +20,10 @@ public class ProfileController {
 
     // 프로필 조회
     @GetMapping("/{memberId}/profile")
-    public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long memberId) {
-        ProfileResponseDto profile = profileService.getProfile(memberId);
-        return ResponseEntity.ok(profile);
+    public ResponseEntity<ProfileWithStreakResponse> getProfileWithStreak(@PathVariable Long memberId) {
+        var profile = profileService.getProfile(memberId);
+        var streak = streakService.getStreak(memberId);
+        return ResponseEntity.ok(new ProfileWithStreakResponse(streak, profile));
     }
 
     // 프로필 수정

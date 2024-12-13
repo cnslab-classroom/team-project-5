@@ -17,6 +17,13 @@ public interface GoalDateStatusRepository extends JpaRepository<GoalDateStatus, 
             "WHERE gds.goal.member = :member AND gds.goal_date >= :startDate AND gds.goal_date <= :endDate " +
             "ORDER BY gds.goal_date ASC")
     List<GoalDateStatus> findByMemberAndDateRange(@Param("member") Member member,
-                                                       @Param("startDate") Date startDate,
-                                                       @Param("endDate") Date endDate);
+                                                  @Param("startDate") Date startDate,
+                                                  @Param("endDate") Date endDate);
+
+    @Query("SELECT gds FROM GoalDateStatus gds " +
+            "JOIN gds.goal goal " +
+            "JOIN goal.member member " +
+            "WHERE member.member_id = :memberId AND gds.goal_date = :goalDate")
+    List<GoalDateStatus> findStatusesByMemberAndDate(@Param("memberId") Long memberId,
+                                                     @Param("goalDate") LocalDate goalDate);
 }
