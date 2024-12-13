@@ -9,7 +9,9 @@ import java.awt.FlowLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -55,13 +57,15 @@ public class ProfilePanel extends JPanel {
 
     JButton editButton = new JButton("프로필 수정");
     editButton.setFont(new Font("Paperlogy", Font.PLAIN, 12));
-    editButton.setBackground(Color.white); // 초록색
+    editButton.setBackground(Color.white);
+    editButton.addActionListener(e -> showProfileInputDialog());
     namePanel.add(editButton);
 
     mainPanel.add(namePanel);
 
     // 4. 유저 정보 패널
     JPanel userInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    userInfoPanel.setPreferredSize(new Dimension(600, 150));
     userInfoPanel.add(createUserInfoPanel());
     mainPanel.add(userInfoPanel);
 
@@ -101,19 +105,15 @@ public class ProfilePanel extends JPanel {
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     panel.setBorder(new LineBorder(Color.GRAY, 1, true));
     panel.setBackground(Color.WHITE);
-    panel.setPreferredSize(new Dimension(300, 150));
+    panel.setPreferredSize(new Dimension(600, 150));
 
     JLabel introLabel = new JLabel("<html><b>print(\"Hello, World!\")</b></html>");
-    introLabel.setFont(new Font("paperlogy", Font.BOLD, 16));
+    introLabel.setFont(new Font("paperlogy", Font.BOLD, 30));
     introLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
     JLabel nameLabel = new JLabel("이름: 김수오");
     nameLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
     nameLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
-
-    JLabel statusLabel = new JLabel("상태: 🟢");
-    statusLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
-    statusLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
 
     JLabel emojiLabel = new JLabel("이모지: 🥰");
     emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
@@ -130,7 +130,6 @@ public class ProfilePanel extends JPanel {
     // 패널에 각 항목 추가
     panel.add(introLabel);
     panel.add(nameLabel);
-    panel.add(statusLabel);
     panel.add(emojiLabel);
     panel.add(introOneLineLabel);
     panel.add(affiliationLabel);
@@ -139,4 +138,54 @@ public class ProfilePanel extends JPanel {
 
     return panel;
   }
+
+  // 프로필 편집 Dialog
+  private void showProfileInputDialog() {
+    // 입력 필드 생성
+    JTextField inputName = new JTextField(20);
+    JTextField inputEmoji = new JTextField(20);
+    JTextField inputIntroOneLine = new JTextField(20);
+    JTextField inputAffiliation = new JTextField(20);
+
+    // 입력 패널 생성
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+    // 각 입력 필드에 대한 레이블 및 필드 추가
+    panel.add(new JLabel("이름:"));
+    panel.add(inputName);
+
+    panel.add(new JLabel("이모지:"));
+    panel.add(inputEmoji);
+
+    panel.add(new JLabel("한 줄 소개:"));
+    panel.add(inputIntroOneLine);
+
+    panel.add(new JLabel("소속:"));
+    panel.add(inputAffiliation);
+
+    // 다이얼로그 표시
+    int result = JOptionPane.showConfirmDialog(this, panel, "프로필 수정", JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    // 확인 버튼이 눌렸을 때 처리
+    if (result == JOptionPane.OK_OPTION) {
+      String name = inputName.getText().trim();
+      String emoji = inputEmoji.getText().trim();
+      String intro = inputIntroOneLine.getText().trim();
+      String affiliation = inputAffiliation.getText().trim();
+
+      // 입력 확인
+      if (!name.isEmpty() && !emoji.isEmpty() && !intro.isEmpty() && !affiliation.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            String.format("이름: %s\n이모지: %s\n한 줄 소개: %s\n소속: %s",
+                name, emoji, intro, affiliation),
+            "프로필 정보",
+            JOptionPane.INFORMATION_MESSAGE);
+      } else {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요!", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
 }
