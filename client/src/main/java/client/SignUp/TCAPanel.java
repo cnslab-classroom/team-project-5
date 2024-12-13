@@ -19,7 +19,7 @@ import client.Frame;
 public class TCAPanel extends JPanel {
     public TCAPanel(Frame parentFrame) {
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(new Color(240, 240, 240));
 
         // 약관 텍스트 영역 생성
         JTextArea termsTextArea = new JTextArea();
@@ -73,12 +73,12 @@ public class TCAPanel extends JPanel {
 
         // 하단 체크박스와 버튼 패널 생성
         JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBackground(Color.WHITE);
+        bottomPanel.setBackground(new Color(240, 240, 240));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // 동의 체크박스
         JCheckBox agreeCheckBox = new JCheckBox("개인정보 처리 방침에 동의합니다.");
-        agreeCheckBox.setBackground(Color.WHITE);
+        agreeCheckBox.setBackground(new Color(240, 240, 240));
 
         // 다음 버튼
         JButton nextButton = new JButton("다음");
