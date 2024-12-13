@@ -1,6 +1,5 @@
 package com.springboot.harubi.Domain.Entity;
 
-import com.springboot.harubi.Domain.Dto.request.AuthRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -44,7 +43,9 @@ public class Goal {
             cal.setTime(goal_start_date);
 
             while (!cal.getTime().after(goal_end_date)) {
-                goalDateStatuses.add(new GoalDateStatus(cal.getTime(), false, this));
+                Date currentDate = cal.getTime();
+                GoalDateStatus status = new GoalDateStatus(currentDate, false, this);
+                goalDateStatuses.add(status);
                 cal.add(Calendar.DATE, 1);  // 하루씩 증가
             }
         }

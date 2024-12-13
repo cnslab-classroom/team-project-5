@@ -1,5 +1,7 @@
 package com.springboot.harubi.Domain.Entity;
 
+import com.springboot.harubi.Domain.Dto.request.PlanCheckRequestDto;
+import com.springboot.harubi.Domain.Dto.response.PlanCheckResponseDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,27 +17,30 @@ public class GoalDateStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long status_id;
 
+    @Temporal(TemporalType.DATE) // 시간 정보 없이 날짜만 저장
     @Column(nullable = false)
     private Date goal_date;
 
     @Column(nullable = false)
-    private boolean goal_status;
+    private boolean goal_status = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Member와의 관계 매핑
-    @JoinColumn(name = "member_id", nullable = false) // 실제 DB의 member_id와 매핑
-    private Member member;
-
-    public GoalDateStatus(Date goal_date, boolean goal_status, Goal goal, Member member) {
+    public GoalDateStatus(Date goal_date, boolean goal_status, Goal goal) {
         this.goal_date = goal_date;
         this.goal_status = goal_status;
         this.goal = goal;
-        this.member = member;
     }
 
-    public GoalDateStatus(Date time, boolean b, Goal goal) {
+//    public GoalDateStatus(PlanCheckRequestDto planCheckRequestDto, Goal goal) {
+//        this.status_id = planCheckRequestDto.getPlan_status_id();
+//        this.goal_status = planCheckRequestDto.isPlan_status();
+//        this.goal = goal;
+//    }
+
+    public Member getMember() {
+        return this.goal.getMember();
     }
 }

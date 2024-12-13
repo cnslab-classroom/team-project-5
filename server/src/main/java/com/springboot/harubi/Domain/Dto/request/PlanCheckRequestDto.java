@@ -9,8 +9,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlanWriteRequestDto {
-    private String goal_text;
-    private Date goal_start_date;
-    private Date goal_end_date;
+public class PlanCheckRequestDto {
+    private Long goal_id;
+    private boolean plan_status;
 }

@@ -6,6 +6,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -37,7 +41,7 @@ public class StatisticsPanel extends JPanel {
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(new EmptyBorder(0, 10, 10, 10)); // 외곽 테두리
+        // topPanel.setBorder(new EmptyBorder(0, 10, 10, 10)); // 외곽 테두리
 
         // 텍스트와 범례를 포함한 패널
         JPanel textPanel = new JPanel(new BorderLayout());
@@ -59,9 +63,10 @@ public class StatisticsPanel extends JPanel {
         labelMin.setAlignmentX(Component.CENTER_ALIGNMENT);
         legendPanel.add(labelMin);
 
+        // 0~100 사이의 값으로 점점 진한 초록색 생성
         for (int i = 0; i <= 100; i += 25) {
             JPanel colorPanel = new JPanel();
-            colorPanel.setBackground(getColorForValue(i));
+            colorPanel.setBackground(getColorForValue(i)); // 각 단계에 해당하는 색상
             colorPanel.setPreferredSize(new Dimension(10, 20));
             legendPanel.add(colorPanel);
         }
@@ -83,32 +88,58 @@ public class StatisticsPanel extends JPanel {
     }
 
     private JPanel createGraphPanel() {
-        JPanel graphPanel = new JPanel(new GridLayout(7, 53, 2, 2));
+        JPanel graphPanel = new JPanel(new GridLayout(7, 54, 2, 2)); // 7행 54열
         graphPanel.setBackground(new Color(240, 240, 240));
         Border outerBorder = new LineBorder(Color.GRAY, 2, true);
         Border innerBorder = new EmptyBorder(10, 10, 10, 10);
-        graphPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); // 외곽 테두리
+        graphPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
-        // 그리드 셀 생성
-        for (int i = 0; i < 7 * 53; i++) {
-            JPanel cell = new JPanel();
-            int value = (int) (Math.random() * 100); // 0~100 랜덤 값
-            cell.setBackground(getColorForValue(value));
-            graphPanel.add(cell);
+        // 요일 배열
+        String[] days = { "M", "T", "W", "T", "F", "S", "S" };
+
+        // 그리드 생성
+        for (int row = 0; row < 7; row++) {
+            // 1. 각 행의 첫 번째 셀에 요일 추가
+            JLabel dayLabel = new JLabel(days[row], SwingConstants.CENTER);
+            dayLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+            // 토요일과 일요일 색상 설정
+            if (row == 5) {
+                dayLabel.setForeground(Color.BLUE); // 토요일
+            } else if (row == 6) {
+                dayLabel.setForeground(Color.RED); // 일요일
+            } else {
+                dayLabel.setForeground(Color.BLACK); // 기본 요일
+            }
+
+            graphPanel.add(dayLabel); // 요일 추가
+
+            // 2. 나머지 53개의 셀 추가
+            for (int col = 0; col < 53; col++) {
+                JPanel cell = new JPanel() {
+                    @Override
+                    public Dimension getPreferredSize() {
+                        return new Dimension(2, 2); // 셀 크기 고정
+                    }
+                };
+                int value = (int) (Math.random() * 100); // 0~100 랜덤 값
+                cell.setBackground(getColorForValue(value));
+                graphPanel.add(cell);
+            }
         }
+
         return graphPanel;
     }
 
     private Color getColorForValue(int value) {
-        int greenIntensity = (int) (255 * (value / 100.0)); // 0에서 255로 변환
+        int greenIntensity = Math.min((int) (255 * ((100.0 - value) / 100.0)), 255);
         return new Color(0, greenIntensity, 0); // 초록색 톤
     }
 
-    private JPanel createStatisticsPanel() {
-        JPanel statsPanel = new JPanel();
-        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
-        statsPanel.setBorder(new EmptyBorder(20, 10, 20, 10)); // 패널 내부 여백
+    public JPanel createStatisticsPanel() {
+        JPanel statsPanel = new JPanel(new BorderLayout());
         statsPanel.setBackground(Color.WHITE);
+        statsPanel.setBorder(new EmptyBorder(10, 0, 0, 0)); // 내부 여백
 
         JLabel statsTitle = new JLabel("지금까지의 통계를 보여드릴게요! 📈");
         statsTitle.setFont(new Font("paperlogy", Font.PLAIN, 20));
@@ -116,7 +147,7 @@ public class StatisticsPanel extends JPanel {
 
         statsTitle.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
         statsTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-        statsPanel.add(statsTitle, BorderLayout.WEST);
+        statsPanel.add(statsTitle, BorderLayout.NORTH);
 
         // 통계 리스트 패널
         JPanel listPanel = new JPanel();
@@ -126,25 +157,63 @@ public class StatisticsPanel extends JPanel {
         Border innerBorder = new EmptyBorder(0, 10, 0, 10);
         listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); // 외곽 테두리
 
-        String[] tasks = { "1일 1백준 🖥", "신나는 방 청소 🧹", "기초영작문 노트정리 📝" };
-        String[] progress = { "(55/94) 58.5%", "(11/13) 84.6%", "(18/52) 34.6%" };
+        // Mock 데이터 생성
+        List<Map<String, Object>> mockData = new ArrayList<>();
 
-        for (int i = 0; i < tasks.length; i++) {
+        Map<String, Object> item1 = new HashMap<>();
+        item1.put("goal_text", "1일 1백준wnswns");
+        item1.put("goal_date_achievement", 55);
+        item1.put("goal_whole_date", 94);
+        item1.put("goal_percent", 58.5);
+        mockData.add(item1);
+
+        Map<String, Object> item2 = new HashMap<>();
+        item2.put("goal_text", "신나는 방 청소");
+        item2.put("goal_date_achievement", 11);
+        item2.put("goal_whole_date", 13);
+        item2.put("goal_percent", 84.6);
+        mockData.add(item2);
+
+        Map<String, Object> item3 = new HashMap<>();
+        item3.put("goal_text", "기초영작문 노트정리");
+        item3.put("goal_date_achievement", 18);
+        item3.put("goal_whole_date", 52);
+        item3.put("goal_percent", 34.6);
+        mockData.add(item3);
+
+        // 데이터 기반으로 리스트 구성
+        for (Map<String, Object> item : mockData) {
             JPanel taskPanel = new JPanel(new BorderLayout());
             taskPanel.setBackground(new Color(240, 240, 240));
 
-            JCheckBox checkBox = new JCheckBox(tasks[i]);
+            String goalText = (String) item.get("goal_text");
+            int achieved = (int) item.get("goal_date_achievement");
+            int total = (int) item.get("goal_whole_date");
+            double percent = (double) item.get("goal_percent");
+
+            JLabel checkBox = new JLabel(goalText);
             checkBox.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             taskPanel.add(checkBox, BorderLayout.WEST);
 
-            JLabel progressLabel = new JLabel(progress[i], SwingConstants.RIGHT);
+            // 목표 진행률 텍스트 생성
+            int greenIntensity = Math.min((int) (255 * ((100 - percent) / 100.0)), 255); // percent 값에 따른 색상
+            String progressText = String.format("(%d/%d) <span style='color: rgb(0,%d,0);'>%.1f%%</span>",
+                    achieved,
+                    total,
+                    greenIntensity, // 동적으로 계산한 초록색 강도
+                    percent);
+
+            // HTML을 사용해 JLabel 생성
+            JLabel progressLabel = new JLabel("<html>" + progressText + "</html>", SwingConstants.RIGHT);
             progressLabel.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-            taskPanel.add(progressLabel, BorderLayout.EAST);
+
+            // 패널에 레이블 추가
+            taskPanel.add(progressLabel, BorderLayout.CENTER);
 
             listPanel.add(taskPanel);
         }
 
-        statsPanel.add(listPanel);
+        statsPanel.add(listPanel, BorderLayout.CENTER);
         return statsPanel;
     }
 
