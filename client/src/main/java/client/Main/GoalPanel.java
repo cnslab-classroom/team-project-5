@@ -22,7 +22,7 @@ public class GoalPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
 
-        add(Box.createRigidArea(new Dimension(0, 10)));
+        add(Box.createRigidArea(new Dimension(0, 50)));
 
         // 상단 제목 텍스트
         JLabel titleLabel = new JLabel("오늘의 목표를 100% 달성했어요.");
