@@ -1,6 +1,7 @@
 package com.springboot.harubi.Service;
 
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
 import com.springboot.harubi.Domain.Entity.Member;
@@ -67,5 +68,33 @@ public class GroupService {
                 .toList();
 
         return new GroupListResponseDto(groupInfoList);
+    }
+
+    public GroupDetailResponseDto getGroupDetails(Long group_id) {
+        StudyGroup studyGroup = studyGroupRepository.findById(group_id)
+                .orElseThrow(() -> new BaseException(404, "해당 그룹이 존재하지 않습니다."));
+
+        List<GroupDetailResponseDto.StudyInfo> studyInfoList = studyGroup.getStudies().stream()
+                .map(study -> new GroupDetailResponseDto.StudyInfo(
+                        study.getStudy_end_date().toString(),
+                        study.getStudy_text()
+                ))
+                .collect(Collectors.toList());
+
+        List<GroupDetailResponseDto.MemberInfo> memberInfoList = studyGroup.getMemberGroups().stream()
+                .map(memberGroup -> new GroupDetailResponseDto.MemberInfo(
+                        memberGroup.getMember().getIcon(),
+                        memberGroup.getMember().getName()
+                ))
+                .collect(Collectors.toList());
+
+        List<GroupDetailResponseDto.ReferenceLink> referenceLinkList = studyGroup.getReferences().stream()
+                .map(reference -> new GroupDetailResponseDto.ReferenceLink(
+                        reference.getReference_name(),
+                        reference.getReference_url()
+                ))
+                .toList();
+
+        return new GroupDetailResponseDto(studyInfoList, memberInfoList, referenceLinkList);
     }
 }
