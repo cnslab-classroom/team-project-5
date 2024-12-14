@@ -70,7 +70,7 @@ public class Member {
         this.password = authRequestDto.getPassword();
         this.nickname = authRequestDto.getNickname();
         this.email = authRequestDto.getEmail();
-        this.agreed = authRequestDto.isAgreed();
+        this.agreed = false;
         this.icon = icon;
     }
 
