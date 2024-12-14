@@ -37,7 +37,4 @@ public class StudyGroup {
     // One to Many 관계 설정
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reference> references = new ArrayList<>();
-
-    @OneToOne(mappedBy = "studyGroup")
-    private Star star;  // 각 그룹은 하나의 즐겨찾기 상태를 가질 수 있음
 }
