@@ -90,7 +90,7 @@ public class SignUpPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(sendSignUpData())
-                    parentFrame.switchToPanel(new TCAPanel(parentFrame));
+                    parentFrame.switchToPanel(new TCAPanel(parentFrame, emailField.getText()));
             }
         });
     }
@@ -143,7 +143,7 @@ public class SignUpPanel extends JPanel {
         String name = nameField.getText();
         String email = emailField.getText();
         String nickname = nicknameField.getText();
-        boolean agreed = true; // 약관 동의 기본 값
+        boolean agreed = false; // 약관 동의 기본 값
 
         // 데이터 검증 (필요 시 추가)
         if (id.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || nickname.isEmpty()) {

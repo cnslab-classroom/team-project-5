@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 public class SendPostTCA {
 
-    public static void sendPostTCA(boolean agreement) {
+    public static void sendPostTCA(String email, boolean agreed) {
         try {
             // 서버 URL
             URL url = new URL("http://localhost:8080/auth/agree");
@@ -22,7 +22,10 @@ public class SendPostTCA {
             conn.setDoOutput(true);
 
             // JSON 데이터 생성
-            String jsonInputString = String.format("{ \"agreement\": %b }", agreement);
+            String jsonInputString = String.format(
+                "{ \"email\": \"%s\", \"agreed\": %b }",
+                email, agreed
+            );
 
             // 요청 데이터 로그
             System.out.println("POST JSON: " + jsonInputString);

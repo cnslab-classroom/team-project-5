@@ -26,7 +26,7 @@ public class SendPostSignUp {
                 "{ \"name\": \"%s\", \"sign_id\": \"%s\", \"password\": \"%s\", \"nickname\": \"%s\", \"email\": \"%s\", \"agreed\": %b }",
                 name, signId, password, nickname, email, agreed);
 
-                System.out.println("서버 응답 코드: " + jsonInputString);
+            System.out.println("서버 응답 코드: " + jsonInputString);
 
             // 서버로 데이터 전송
             try (OutputStream os = conn.getOutputStream()) {
@@ -64,7 +64,5 @@ public class SendPostSignUp {
             JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
-        
     }
 }
