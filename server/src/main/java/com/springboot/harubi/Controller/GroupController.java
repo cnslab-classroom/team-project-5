@@ -2,13 +2,16 @@ package com.springboot.harubi.Controller;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.springboot.harubi.Common.BaseResponse;
+import com.springboot.harubi.Domain.Dto.request.AddReferenceRequestDto;
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
 import com.springboot.harubi.Domain.Dto.request.StudyAddRequestDto;
+import com.springboot.harubi.Domain.Dto.response.AddReferenceResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
 import com.springboot.harubi.Domain.Dto.response.StudyAddResponseDto;
 import com.springboot.harubi.Service.GroupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +36,7 @@ public class GroupController {
     }
 
     @GetMapping("/{group_id}/detail")
-    public BaseResponse<GroupDetailResponseDto> showGroupDetail(                                                                @PathVariable("group_id") Long group_id) {
+    public BaseResponse<GroupDetailResponseDto> showGroupDetail(@PathVariable("group_id") Long group_id) {
         GroupDetailResponseDto response = groupService.getGroupDetails(group_id);
         return new BaseResponse<>(HttpStatus.OK.value(), null, response);
     }
@@ -45,4 +48,12 @@ public class GroupController {
         return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 목표가 추가되었습니다", response);
     }
 
+    @PostMapping("/{group_id}/add_reference")
+    public BaseResponse<AddReferenceResponseDto> addReference(
+            @PathVariable Long group_id,
+            @Valid @RequestBody AddReferenceRequestDto requestDto) {
+
+        AddReferenceResponseDto responseDto = groupService.addReference(group_id, requestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "레퍼런스가 추가되었습니다.", responseDto);
+    }
 }
