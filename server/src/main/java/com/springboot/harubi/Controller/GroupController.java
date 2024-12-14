@@ -41,7 +41,7 @@ public class GroupController {
     @PostMapping("/{group_id}/add_study")
     public BaseResponse<StudyAddResponseDto> makeStudyPlan(@PathVariable("group_id") Long group_id,
                                                            @RequestBody StudyAddRequestDto studyAddRequestDto) {
-        StudyAddResponseDto response = groupService.makesPlan(group_id, studyAddRequestDto);
+        StudyAddResponseDto response = groupService.makePlan(group_id, studyAddRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 목표가 추가되었습니다", response);
     }
 

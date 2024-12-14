@@ -106,7 +106,7 @@ public class GroupService {
     }
 
     @Transactional
-    public StudyAddResponseDto makesPlan(Long group_id, StudyAddRequestDto studyAddRequestDto) {
+    public StudyAddResponseDto makePlan(Long group_id, StudyAddRequestDto studyAddRequestDto) {
         StudyGroup studyGroup = studyGroupRepository.findById(group_id)
                 .orElseThrow(() -> new BaseException(404, "존재하지 않는 그룹입니다."));
 
