@@ -9,6 +9,4 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ScheduleWriteResponseDto {
     private Long plan_id;
-    private String plan_text;
-    private LocalDateTime goal_date;
 }
