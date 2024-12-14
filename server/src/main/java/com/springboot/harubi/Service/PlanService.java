@@ -2,10 +2,12 @@ package com.springboot.harubi.Service;
 
 import com.springboot.harubi.Domain.Dto.request.PlanCheckRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
+import com.springboot.harubi.Domain.Dto.request.ScheduleWriteRequestDto;
 import com.springboot.harubi.Domain.Dto.response.*;
 import com.springboot.harubi.Domain.Entity.Goal;
 import com.springboot.harubi.Domain.Entity.GoalDateStatus;
 import com.springboot.harubi.Domain.Entity.Member;
+import com.springboot.harubi.Domain.Entity.Plan;
 import com.springboot.harubi.Exception.BaseException;
 import com.springboot.harubi.Repository.GoalDateStatusRepository;
 import com.springboot.harubi.Repository.GoalRepository;
@@ -232,5 +234,25 @@ public class PlanService {
         Goal goal = new Goal(planWriteRequestDto, member);
 
         return goalRepository.save(goal);
+    }
+
+    @Transactional
+    public ScheduleWriteResponseDto updatePlan(Long memberId, ScheduleWriteRequestDto requestDto) {
+        // 플랜 검색
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(404, "존재하지 않는 회원입니다."));
+
+        // 플랜 정보 업데이트
+        Plan plan = new Plan();
+        plan.setPlan_text(requestDto.getPlan_text());
+        plan.setPlan_date(requestDto.getGoal_date());
+        Plan updatedPlan = planRepository.save(plan);
+
+        // 응답 DTO 생성 및 반환
+        return new ScheduleWriteResponseDto(
+                updatedPlan.getPlan_id(),
+                updatedPlan.getPlan_text(),
+                updatedPlan.getPlan_date()
+        );
     }
 }
