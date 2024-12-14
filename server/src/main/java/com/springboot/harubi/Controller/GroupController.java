@@ -1,10 +1,13 @@
 package com.springboot.harubi.Controller;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.request.StudyAddRequestDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
+import com.springboot.harubi.Domain.Dto.response.StudyAddResponseDto;
 import com.springboot.harubi.Service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,4 +37,12 @@ public class GroupController {
         GroupDetailResponseDto response = groupService.getGroupDetails(group_id);
         return new BaseResponse<>(HttpStatus.OK.value(), null, response);
     }
+
+    @PostMapping("/{group_id}/add_study")
+    public BaseResponse<StudyAddResponseDto> makeStudyPlan(@PathVariable("group_id") Long group_id,
+                                                           @RequestBody StudyAddRequestDto studyAddRequestDto) {
+        StudyAddResponseDto response = groupService.makesPlan(group_id, studyAddRequestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 목표가 추가되었습니다", response);
+    }
+
 }

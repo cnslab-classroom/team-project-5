@@ -1,9 +1,11 @@
 package com.springboot.harubi.Service;
 
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.request.StudyAddRequestDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
+import com.springboot.harubi.Domain.Dto.response.StudyAddResponseDto;
 import com.springboot.harubi.Domain.Entity.Member;
 import com.springboot.harubi.Domain.Entity.MemberGroup;
 import com.springboot.harubi.Domain.Entity.Study;
@@ -11,10 +13,14 @@ import com.springboot.harubi.Domain.Entity.StudyGroup;
 import com.springboot.harubi.Exception.BaseException;
 import com.springboot.harubi.Repository.MemberRepository;
 import com.springboot.harubi.Repository.StudyGroupRepository;
+import com.springboot.harubi.Repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +30,7 @@ import java.util.stream.Collectors;
 public class GroupService {
     private final StudyGroupRepository studyGroupRepository;
     private final MemberRepository memberRepository;
+    private final StudyRepository studyRepository;
 
     @Transactional
     public MakeGroupResponseDto makesGroup(Long member_id, MakeGroupRequestDto makeGroupRequestDto) {
@@ -96,5 +103,22 @@ public class GroupService {
                 .toList();
 
         return new GroupDetailResponseDto(studyInfoList, memberInfoList, referenceLinkList);
+    }
+
+    @Transactional
+    public StudyAddResponseDto makesPlan(Long group_id, StudyAddRequestDto studyAddRequestDto) {
+        StudyGroup studyGroup = studyGroupRepository.findById(group_id)
+                .orElseThrow(() -> new BaseException(404, "존재하지 않는 그룹입니다."));
+
+        Study study = new Study();
+        study.setStudy_text(studyAddRequestDto.getStudy_name());
+        study.setStudy_emoji(studyAddRequestDto.getStudy_emoji());
+        study.setStudy_start_date(Date.valueOf(LocalDate.now()));
+        study.setStudy_end_date(new Date(studyAddRequestDto.getStudy_end_date().getTime()));
+        study.setStudyGroup(studyGroup);
+
+        Study savedStudy = studyRepository.save(study);
+
+        return new StudyAddResponseDto(savedStudy.getStudy_id());
     }
 }
