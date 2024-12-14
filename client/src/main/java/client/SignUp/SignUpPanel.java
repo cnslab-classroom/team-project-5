@@ -149,10 +149,15 @@ public class SignUpPanel extends JPanel {
         if (id.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
             JOptionPane.showMessageDialog(null, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
             return false;
-        }
+        }  
 
         // SendPostSignUp 호출
-        SendPostSignUp.sendPostSignUp(name, id, password, nickname, email, agreed);
+        boolean able = SendPostSignUp.sendPostSignUp(name, id, password, nickname, email, agreed);
+        if (!able) {
+            JOptionPane.showMessageDialog(null, "이전에 해당 이메일로 가입한 계정이 있습니다.", "회원가입 오류", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
         return true;
     }
 }
