@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.Main.fetchData.FetchStudyList;
+import client.Main.fetchData.FetchStudyListGoal;
 import client.Main.model.StudyItem;
 
 public class ListPanel extends JPanel {
@@ -27,6 +28,7 @@ public class ListPanel extends JPanel {
   private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
 
   private List<StudyItem> studyItems = new ArrayList<>();
+  private int selectGroupId = 1;
 
   public ListPanel() {
     setLayout(new BorderLayout(10, 10)); // 패널 간 간격
@@ -118,6 +120,12 @@ public class ListPanel extends JPanel {
     // 콤보박스 선택 이벤트
     comboBox.addActionListener(e -> {
       String selectedName = (String) comboBox.getSelectedItem();
+      for (StudyItem item : studyItems) {
+        if (item.getName().equals(selectedName)) {
+          selectGroupId = studyItems.indexOf(item) + 1;
+          System.out.println("Selected Group ID: " + selectGroupId);
+        }
+      }
     });
 
     // 상단 패널을 메인 패널에 추가
@@ -307,9 +315,34 @@ public class ListPanel extends JPanel {
 
   // 목표 추가 Dialog
   private void showGoalInputDialog() {
-    String input = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
-    if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + input);
+    JTextField nameField = new JTextField();
+    JTextField endDateField = new JTextField();
+    JTextField emojiField = new JTextField();
+
+    Object[] inputFields = {
+        "이름:", nameField,
+        "종료일 (yyyy-MM-dd):", endDateField,
+        "이모지:", emojiField
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "목표 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = nameField.getText().trim();
+      String endDate = endDateField.getText().trim();
+      String emoji = emojiField.getText().trim();
+
+      if (name.isEmpty() || endDate.isEmpty() || emoji.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListGoal.sendPostRequest(name, endDate, emoji, selectGroupId);
+      }
     }
   }
 

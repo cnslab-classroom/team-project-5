@@ -16,7 +16,7 @@ public class FetchStudyList {
     List<StudyItem> studyItems = new ArrayList<>();
 
     try {
-      URL url = new URL("http://localhost:8080/group/1/list"); // 서버 URL
+      URL url = new URL("http://localhost:8080/group/1/list"); //서버 URL
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
 
