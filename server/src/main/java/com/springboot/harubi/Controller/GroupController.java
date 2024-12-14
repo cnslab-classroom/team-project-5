@@ -1,9 +1,9 @@
 package com.springboot.harubi.Controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.AddReferenceRequestDto;
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.request.MemberInviteRequestDto;
 import com.springboot.harubi.Domain.Dto.request.StudyAddRequestDto;
 import com.springboot.harubi.Domain.Dto.response.AddReferenceResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
@@ -55,5 +55,12 @@ public class GroupController {
 
         AddReferenceResponseDto responseDto = groupService.addReference(group_id, requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "레퍼런스가 추가되었습니다.", responseDto);
+    }
+
+    @PostMapping("/{group_id}/invite")
+    public BaseResponse inviteMember(@PathVariable("group_id") Long group_id,
+                                     @RequestBody MemberInviteRequestDto memberInviteRequestDto) {
+        groupService.invitesMember(group_id, memberInviteRequestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 멤버가 추가되었습니다", null);
     }
 }

@@ -1,7 +1,9 @@
 package com.springboot.harubi.Service;
 
+import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.AddReferenceRequestDto;
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.request.MemberInviteRequestDto;
 import com.springboot.harubi.Domain.Dto.request.StudyAddRequestDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
@@ -143,5 +145,27 @@ public class GroupService {
 
         // 응답 DTO 생성
         return new AddReferenceResponseDto(savedReference.getReference_id());
+    }
+
+    public void invitesMember(Long group_id, MemberInviteRequestDto memberInviteRequestDto) {
+        StudyGroup studyGroup = studyGroupRepository.findById(group_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹을 찾을 수 없습니다."));
+
+        Member member = memberRepository.findByEmail(memberInviteRequestDto.getInvite_email())
+                .orElseThrow(()->new BaseException(404, "초대하려는 회원이 존재하지 않습니다."));
+
+        boolean isAlreadyMember = studyGroup.getMemberGroups().stream()
+                .anyMatch(memberGroup -> memberGroup.getMember().getMember_id().equals(member.getMember_id()));
+
+        if (isAlreadyMember) {
+            throw new BaseException(409, "해당 회원은 이미 그룹에 속해 있습니다.");
+        }
+
+        MemberGroup memberGroup = new MemberGroup();
+        memberGroup.setMember(member);
+        memberGroup.setStudyGroup(studyGroup);
+
+        member.getMemberGroups().add(memberGroup);
+        studyGroup.getMemberGroups().add(memberGroup);
     }
 }
