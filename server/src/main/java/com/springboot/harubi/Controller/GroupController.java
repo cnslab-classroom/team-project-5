@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GroupController {
     private final GroupService groupService;
-
     @PostMapping("/{member_id}/list")
     public BaseResponse<MakeGroupResponseDto> makeGroup(@PathVariable("member_id") Long member_id,
                                                         @RequestBody MakeGroupRequestDto makeGroupRequestDto) {
