@@ -7,9 +7,9 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-public class FetchStudyListGoal {
+public class FetchStudyListAdd {
 
-  public static void sendPostRequest(String studyName, String endDate, String emoji, int groupId) {
+  public static void sendPostGoal(String studyName, String endDate, String emoji, int groupId) {
     try {
       // 서버 URL
       URL url = new URL("http://localhost:8080/group/" + groupId + "/add_study");
@@ -54,4 +54,5 @@ public class FetchStudyListGoal {
       JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
     }
   }
+
 }

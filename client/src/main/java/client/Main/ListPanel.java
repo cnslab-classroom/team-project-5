@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.Main.fetchData.FetchStudyList;
-import client.Main.fetchData.FetchStudyListGoal;
+import client.Main.fetchData.FetchStudyListAdd;
 import client.Main.model.StudyItem;
 
 public class ListPanel extends JPanel {
@@ -341,7 +341,7 @@ public class ListPanel extends JPanel {
         JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
       } else {
         // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
-        FetchStudyListGoal.sendPostRequest(name, endDate, emoji, selectGroupId);
+        FetchStudyListAdd.sendPostGoal(name, endDate, emoji, selectGroupId);
       }
     }
   }
