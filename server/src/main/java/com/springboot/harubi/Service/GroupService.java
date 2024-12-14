@@ -1,16 +1,16 @@
 package com.springboot.harubi.Service;
 
+import com.springboot.harubi.Domain.Dto.request.AddReferenceRequestDto;
 import com.springboot.harubi.Domain.Dto.request.MakeGroupRequestDto;
+import com.springboot.harubi.Domain.Dto.response.AddReferenceResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
-import com.springboot.harubi.Domain.Entity.Member;
-import com.springboot.harubi.Domain.Entity.MemberGroup;
-import com.springboot.harubi.Domain.Entity.Study;
-import com.springboot.harubi.Domain.Entity.StudyGroup;
+import com.springboot.harubi.Domain.Entity.*;
 import com.springboot.harubi.Exception.BaseException;
 import com.springboot.harubi.Repository.MemberRepository;
 import com.springboot.harubi.Repository.StudyGroupRepository;
+import com.springboot.harubi.Repository.ReferenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class GroupService {
     private final StudyGroupRepository studyGroupRepository;
     private final MemberRepository memberRepository;
+    private final ReferenceRepository referenceRepository;
 
     @Transactional
     public MakeGroupResponseDto makesGroup(Long member_id, MakeGroupRequestDto makeGroupRequestDto) {
@@ -97,4 +98,24 @@ public class GroupService {
 
         return new GroupDetailResponseDto(studyInfoList, memberInfoList, referenceLinkList);
     }
+
+    public AddReferenceResponseDto addReference(Long groupId, AddReferenceRequestDto requestDto) {
+        // 그룹 조회
+        StudyGroup studyGroup = studyGroupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹을 찾을 수 없습니다."));
+
+        // Reference 엔티티 생성
+        Reference reference = new Reference();
+        reference.setReference_name(requestDto.getReference_name());
+        reference.setReference_url(requestDto.getReference_url()); // 요청 값 설정
+        reference.setStudyGroup(studyGroup);
+
+        // 저장
+        Reference savedReference = referenceRepository.save(reference);
+
+        // 응답 DTO 생성
+        return new AddReferenceResponseDto(savedReference.getReference_id());
+    }
+
+
 }

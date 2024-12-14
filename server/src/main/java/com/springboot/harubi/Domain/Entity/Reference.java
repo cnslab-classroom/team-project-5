@@ -15,7 +15,7 @@ public class Reference {
     @Column(nullable = false)
     private String reference_name;
 
-    @Column(nullable = false)
+    @Column(nullable = false) // 필드 이름 매칭
     private String reference_url;
 
     // Many to One 관계 설정
