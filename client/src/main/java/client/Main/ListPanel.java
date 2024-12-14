@@ -21,14 +21,19 @@ import java.util.regex.Pattern;
 
 import client.Main.fetchData.FetchStudyList;
 import client.Main.fetchData.FetchStudyListAdd;
+import client.Main.model.GroupDetail;
+import client.Main.model.ListItem;
+import client.Main.model.MemberItem;
+import client.Main.model.ReferenceLinkItem;
 import client.Main.model.StudyItem;
 
 public class ListPanel extends JPanel {
   private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
   private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
 
-  private List<StudyItem> studyItems = new ArrayList<>();
+  private List<ListItem> studyItems = new ArrayList<>();
   private int selectGroupId = 1;
+  GroupDetail groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
 
   public ListPanel() {
     setLayout(new BorderLayout(10, 10)); // 패널 간 간격
@@ -50,7 +55,7 @@ public class ListPanel extends JPanel {
 
   private void fetchDataFromServer() {
     // fetchStudyList 클래스에서 데이터 가져오기
-    studyItems = FetchStudyList.fetchData();
+    studyItems = FetchStudyList.fetchStudyListData();
   }
 
   private JPanel studyListPanel() {
@@ -83,7 +88,7 @@ public class ListPanel extends JPanel {
     listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, new EmptyBorder(10, 10, 0, 10)));
 
     // 서버에서 가져온 데이터를 기반으로 UI 생성
-    for (StudyItem item : studyItems) {
+    for (ListItem item : studyItems) {
       JPanel studyPanel = new JPanel(new BorderLayout());
       studyPanel.setBackground(new Color(240, 240, 240));
       studyPanel.setBorder(new EmptyBorder(0, 0, 10, 0)); // 내부 여백
@@ -111,7 +116,7 @@ public class ListPanel extends JPanel {
 
     // 콤보박스
     String[] names = new String[studyItems.size()];
-    for (StudyItem item : studyItems) {
+    for (ListItem item : studyItems) {
       names[studyItems.indexOf(item)] = item.getName();
     }
     JComboBox<String> comboBox = new JComboBox<>(names);
@@ -120,12 +125,13 @@ public class ListPanel extends JPanel {
     // 콤보박스 선택 이벤트
     comboBox.addActionListener(e -> {
       String selectedName = (String) comboBox.getSelectedItem();
-      for (StudyItem item : studyItems) {
+      for (ListItem item : studyItems) {
         if (item.getName().equals(selectedName)) {
           selectGroupId = studyItems.indexOf(item) + 1;
           System.out.println("Selected Group ID: " + selectGroupId);
         }
       }
+      groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
     });
 
     // 상단 패널을 메인 패널에 추가
@@ -161,25 +167,19 @@ public class ListPanel extends JPanel {
     JPanel goalListPanel = new JPanel();
     goalListPanel.setLayout(new BoxLayout(goalListPanel, BoxLayout.Y_AXIS));
     goalListPanel.setBackground(Color.WHITE);
-    goalListPanel.setBorder(outerBorder);
-    goalListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    goalListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] goalNames = { "1일 1백준", "신나는 방 청소", "기초영작문 노트정리" };
-    String[] goalPeriod = { "2024.10.08", "2024.10.14", "2024.10.21" };
-
-    for (int i = 0; i < goalNames.length; i++) {
+    for (StudyItem study : groupDetail.studies) {
       JPanel goalPanelList = new JPanel(new BorderLayout());
       goalPanelList.setBackground(Color.WHITE);
 
-      JLabel goalPeriodLabel = new JLabel("✏️ " + goalPeriod[i] + " ");
-      goalPeriodLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalPeriodLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      goalPanelList.add(goalPeriodLabel, BorderLayout.WEST);
+      JLabel dateLabel = new JLabel("📅 " + study.getDate() + "  ");
+      dateLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      goalPanelList.add(dateLabel, BorderLayout.WEST);
 
-      JLabel goalName = new JLabel(goalNames[i]);
-      goalName.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalName.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      goalPanelList.add(goalName, BorderLayout.CENTER);
+      JLabel textLabel = new JLabel(study.getText());
+      textLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      goalPanelList.add(textLabel, BorderLayout.CENTER);
 
       goalListPanel.add(goalPanelList);
     }
@@ -211,24 +211,19 @@ public class ListPanel extends JPanel {
     memberListPanel.setLayout(new BoxLayout(memberListPanel, BoxLayout.Y_AXIS));
     memberListPanel.setBackground(Color.WHITE);
     memberListPanel.setBorder(outerBorder);
-    memberListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    memberListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] memberEmoge = { "😀", "😄", "😆", "🥰" };
-    String[] memberNames = { "김수오", "오은진", "최세연", "김단하" };
-
-    for (int i = 0; i < memberNames.length; i++) {
+    for (MemberItem member : groupDetail.members) {
       JPanel memberPanelList = new JPanel(new BorderLayout());
       memberPanelList.setBackground(Color.WHITE);
 
-      JLabel memberEmogeLabel = new JLabel(memberEmoge[i] + " ");
-      memberEmogeLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      memberEmogeLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      memberPanelList.add(memberEmogeLabel, BorderLayout.WEST);
+      JLabel emojiLabel = new JLabel(member.getEmoji() + " ");
+      emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      memberPanelList.add(emojiLabel, BorderLayout.WEST);
 
-      JLabel memberName = new JLabel(memberNames[i]);
-      memberName.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      memberName.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      memberPanelList.add(memberName, BorderLayout.CENTER);
+      JLabel nameLabel = new JLabel(member.getName());
+      nameLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      memberPanelList.add(nameLabel, BorderLayout.CENTER);
 
       memberListPanel.add(memberPanelList);
     }
@@ -260,25 +255,21 @@ public class ListPanel extends JPanel {
     referenceListPanel.setLayout(new BoxLayout(referenceListPanel, BoxLayout.Y_AXIS));
     referenceListPanel.setBackground(Color.WHITE);
     referenceListPanel.setBorder(outerBorder);
-    referenceListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    referenceListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] linkNames = { "Notiondsffsfsdsf", "github", "github", "github", "github" };
-    String[] linkUrl = { "https://www.notion.com/ko", "https://github.com/cnslab-classroom/team-project-5",
-        "https://github.com/cnslab-classroom/team-project-5", "https://github.com/cnslab-classroom/team-project-5",
-        "https://github.com/cnslab-classroom/team-project-5" };
-
-    for (int i = 0; i < linkNames.length; i++) {
-      JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT)); // FlowLayout 사용
+    for (ReferenceLinkItem reference : groupDetail.referenceLinks) {
+      JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT));
       referencePanelList.setBackground(Color.WHITE);
 
       String htmlLink = String.format("<html><div style='width:300px;'>🔗 <a href=''>%s</a></div></html>",
-          linkNames[i]);
+          reference.getName());
+
       JLabel linkLabel = new JLabel(htmlLink);
       linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
       linkLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
 
       // 마우스 클릭 이벤트로 링크 열기
-      final String url = linkUrl[i];
+      final String url = reference.getUrl();
       linkLabel.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -315,18 +306,17 @@ public class ListPanel extends JPanel {
 
   private void refreshData() {
     // 서버에서 최신 데이터 가져오기
-    fetchDataFromServer();
+    studyItems = FetchStudyList.fetchStudyListData();
+    groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
 
     // 화면 갱신
     removeAll();
     JPanel topPanel = studyListPanel();
     JPanel middlePanel = studyPanel();
 
-    // 다시 패널을 추가
     add(topPanel, BorderLayout.NORTH);
     add(middlePanel, BorderLayout.CENTER);
 
-    // 패널을 다시 그리기
     revalidate();
     repaint();
   }
