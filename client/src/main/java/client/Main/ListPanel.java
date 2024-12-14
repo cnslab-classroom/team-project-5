@@ -73,7 +73,7 @@ public class ListPanel extends JPanel {
     titlePanel.add(createButton, BorderLayout.EAST);
 
     // 스터디 추가 Dialog
-    createButton.addActionListener(e -> showInputDialog("스터디 추가", "추가할 스터디를 입력하세요:"));
+    createButton.addActionListener(e -> showStudyInputDialog());
 
     studyListPanel.add(titlePanel, BorderLayout.NORTH);
 
@@ -115,7 +115,7 @@ public class ListPanel extends JPanel {
       names[studyItems.indexOf(item)] = item.getName();
     }
     JComboBox<String> comboBox = new JComboBox<>(names);
-    comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
+    comboBox.setFont(new Font("paperlogy", Font.PLAIN, 20));
 
     // 콤보박스 선택 이벤트
     comboBox.addActionListener(e -> {
@@ -313,6 +313,55 @@ public class ListPanel extends JPanel {
     }
   }
 
+  private void refreshData() {
+    // 서버에서 최신 데이터 가져오기
+    fetchDataFromServer();
+
+    // 화면 갱신
+    removeAll();
+    JPanel topPanel = studyListPanel();
+    JPanel middlePanel = studyPanel();
+
+    // 다시 패널을 추가
+    add(topPanel, BorderLayout.NORTH);
+    add(middlePanel, BorderLayout.CENTER);
+
+    // 패널을 다시 그리기
+    revalidate();
+    repaint();
+  }
+
+  // 스터디 그룹 추가 Dialog
+  private void showStudyInputDialog() {
+    JTextField study_group_name = new JTextField();
+    JTextField study_emoji = new JTextField();
+
+    Object[] inputFields = {
+        "이름:", study_group_name,
+        "이모지:", study_emoji,
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "스터디 그룹 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = study_group_name.getText().trim();
+      String emoji = study_emoji.getText().trim();
+
+      if (name.isEmpty() || emoji.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListAdd.sendPostList(name, emoji);
+        refreshData();
+      }
+    }
+  }
+
   // 목표 추가 Dialog
   private void showGoalInputDialog() {
     JTextField nameField = new JTextField();
@@ -342,6 +391,7 @@ public class ListPanel extends JPanel {
       } else {
         // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
         FetchStudyListAdd.sendPostGoal(name, endDate, emoji, selectGroupId);
+        refreshData();
       }
     }
   }
@@ -353,6 +403,7 @@ public class ListPanel extends JPanel {
     if (input != null && !input.trim().isEmpty()) {
       // 서버로 POST 요청 전송
       FetchStudyListAdd.sendPostMember(input, selectGroupId);
+      refreshData();
     } else {
       JOptionPane.showMessageDialog(this, "입력된 값이 없습니다. 다시 입력해 주세요.", "오류", JOptionPane.ERROR_MESSAGE);
     }
@@ -384,15 +435,8 @@ public class ListPanel extends JPanel {
       } else {
         // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
         FetchStudyListAdd.sendPostReference(name, url, selectGroupId);
+        refreshData();
       }
-    }
-  }
-
-  // 공통 Dialog
-  private void showInputDialog(String title, String message) {
-    String input = JOptionPane.showInputDialog(this, message, title, JOptionPane.PLAIN_MESSAGE);
-    if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, title + ": " + input);
     }
   }
 
