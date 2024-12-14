@@ -13,5 +13,4 @@ public class AuthRequestDto {
     private String password;
     private String nickname;
     private String email;
-    private boolean agreed;
 }

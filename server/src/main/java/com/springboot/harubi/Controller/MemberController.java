@@ -21,7 +21,7 @@ public class MemberController {
     @PostMapping("/auth/signUp")
     public BaseResponse signUp(@RequestBody AuthRequestDto authRequestDto) {
         memberService.tempSave(authRequestDto);
-        return new BaseResponse(HttpStatus.OK.value(), "회원가입이 완료되었습니다.");
+        return new BaseResponse(HttpStatus.OK.value(), null);
     }
 
     @PostMapping("/auth/login")
@@ -32,10 +32,7 @@ public class MemberController {
 
     @PostMapping("/auth/agree")
     public BaseResponse agreeToPrivacy(@RequestBody AgreeRequestDto agreeRequestDto) {
-        memberService.completeSignUp(agreeRequestDto.getEmail());
-        if (!agreeRequestDto.isAgreed()) {
-            throw new BaseException(400, "개인정보 처리 방침에 동의해야 합니다.");
-        }
+        memberService.completeSignUp(agreeRequestDto);
         return new BaseResponse(HttpStatus.OK.value(), "회원가입이 완료되었습니다.");
     }
 }
