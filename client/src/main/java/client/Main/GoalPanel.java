@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import client.Main.fetchData.SendPostGoal;
+
 public class GoalPanel extends JPanel {
     public GoalPanel() {
         // 패널 설정
@@ -80,7 +82,7 @@ public class GoalPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showGoalInputDialog();
+                showGoalInputDialog(checklistPanel);
             }
         });
         
@@ -88,8 +90,6 @@ public class GoalPanel extends JPanel {
         JCheckBox checkBox1 = createCheckBox("1일 1백준 📄");
         JCheckBox checkBox2 = createCheckBox("신나는 방 청소 ✨");
         JCheckBox checkBox3 = createCheckBox("기초영작문 노트정리 📝");
-        JCheckBox checkBox4 = createCheckBox("테스트1");
-        JCheckBox checkBox5 = createCheckBox("테스트2");
 
         // 체크박스 추가
         checklistPanel.add(checkBox1);
@@ -97,10 +97,6 @@ public class GoalPanel extends JPanel {
         checklistPanel.add(checkBox2);
         checklistPanel.add(Box.createRigidArea(new Dimension(0, 5)));
         checklistPanel.add(checkBox3);
-        checklistPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        checklistPanel.add(checkBox4);
-        checklistPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        checklistPanel.add(checkBox5);
 
         // 체크리스트 패널을 플러스 버튼 아래에 추가
         checklistContainer.add(checklistPanel);
@@ -123,10 +119,31 @@ public class GoalPanel extends JPanel {
     }
 
     // 목표 추가 Dialog
-    private void showGoalInputDialog() {
-        String input = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
-        if (input != null && !input.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + input);
+    private void showGoalInputDialog(JPanel checklistPanel) {
+        String goalText = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
+        if (goalText != null && !goalText.trim().isEmpty()) {
+            String startDate = JOptionPane.showInputDialog(this, "목표 시작 날짜를 입력하세요 (YYYY-MM-DD):", "목표 시작 날짜", JOptionPane.PLAIN_MESSAGE);
+            String endDate = JOptionPane.showInputDialog(this, "목표 종료 날짜를 입력하세요 (YYYY-MM-DD):", "목표 종료 날짜", JOptionPane.PLAIN_MESSAGE);
+
+            if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
+                try {
+                    // 서버로 목표 데이터 전송
+                    SendPostGoal.sendPostGoal(goalText, startDate, endDate);
+
+                    // 새로운 체크박스 추가
+                    JCheckBox newCheckBox = createCheckBox(goalText);
+                    checklistPanel.add(newCheckBox);
+                    checklistPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 간격 추가
+                    checklistPanel.revalidate(); // UI 갱신
+                    checklistPanel.repaint();
+
+                    JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + goalText);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "목표 추가 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "시작 날짜와 종료 날짜를 모두 입력해야 합니다.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }

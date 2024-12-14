@@ -90,7 +90,7 @@ public class SignUpPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(sendSignUpData())
-                    parentFrame.switchToPanel(new TCAPanel(parentFrame));
+                    parentFrame.switchToPanel(new TCAPanel(parentFrame, emailField.getText()));
             }
         });
     }
@@ -143,16 +143,20 @@ public class SignUpPanel extends JPanel {
         String name = nameField.getText();
         String email = emailField.getText();
         String nickname = nicknameField.getText();
-        boolean agreed = true; // 약관 동의 기본 값
 
         // 데이터 검증 (필요 시 추가)
         if (id.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
             JOptionPane.showMessageDialog(null, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
             return false;
-        }
+        }  
 
         // SendPostSignUp 호출
-        SendPostSignUp.sendPostSignUp(name, id, password, nickname, email, agreed);
+        boolean able = SendPostSignUp.sendPostSignUp(name, id, password, nickname, email);
+        if (!able) {
+            JOptionPane.showMessageDialog(null, "이전에 해당 이메일로 가입한 계정이 있습니다.", "회원가입 오류", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
         return true;
     }
 }

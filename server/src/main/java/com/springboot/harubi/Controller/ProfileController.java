@@ -2,9 +2,8 @@ package com.springboot.harubi.Controller;
 
 import com.springboot.harubi.Domain.Dto.request.ProfileUpdateRequestDto;
 import com.springboot.harubi.Domain.Dto.response.ProfileResponseDto;
-import com.springboot.harubi.Domain.Dto.response.ProfileWithStreakResponse;
+import com.springboot.harubi.Domain.Dto.response.ProfileWithStreakResponseDto;
 import com.springboot.harubi.Domain.Dto.response.StreakResponseDto;
-import com.springboot.harubi.Domain.Dto.response.UserProfileResponseDto;
 import com.springboot.harubi.Service.ProfileService;
 import com.springboot.harubi.Service.StreakService;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +22,21 @@ public class ProfileController {
 
     // 프로필 조회
     @GetMapping("/{memberId}/profile")
-    public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable Long memberId) {
+    public ResponseEntity<ProfileWithStreakResponseDto> getProfile(@PathVariable Long memberId) {
+
+        // 스트릭 정보 조회
+        StreakResponseDto streak = streakService.getStreak(memberId);
+
+        // 프로필 정보 조회
         ProfileResponseDto profile = profileService.getProfile(memberId);
-        return ResponseEntity.ok(profile);
+
+
+        // 프로필과 스트릭 정보를 ProfileWithResponseDto에 통합
+        ProfileWithStreakResponseDto response = ProfileWithStreakResponseDto.from(streak, profile);
+
+        return ResponseEntity.ok(response);
     }
+
 
     //프로필 수정
     @PatchMapping("/{memberId}/edit_profile")

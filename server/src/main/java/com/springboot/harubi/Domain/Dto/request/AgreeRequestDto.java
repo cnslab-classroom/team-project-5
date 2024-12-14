@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthRequestDto {
-    private String name;
-    private String sign_id;
-    private String password;
-    private String nickname;
+public class AgreeRequestDto {
     private String email;
+    private boolean agreed;
 }
