@@ -55,7 +55,7 @@ public class ProfilePanel extends JPanel {
     JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 왼쪽 정렬
     namePanel.setBackground(new Color(240, 240, 240));
 
-    JLabel name = new JLabel(profileData.getProfile().getName());
+    JLabel name = new JLabel(profileData.getProfile().getName() + " " + profileData.getProfile().getIcon());
     name.setBorder(new EmptyBorder(10, 0, 10, 0));
     name.setFont(new Font("Paperlogy", Font.BOLD, 16));
     namePanel.add(name);

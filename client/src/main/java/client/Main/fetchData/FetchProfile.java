@@ -61,7 +61,7 @@ public class FetchProfile {
       String profileSection = json.split("\"profile\":\\{")[1].split("\\}")[0];
       String name = extractValue(profileSection, "name");
       int status = Integer.parseInt(extractValue(profileSection, "status"));
-      String icon = extractValue(profileSection, "icon");
+      String icon = decodeUnicode(extractValue(profileSection, "icon")); // 유니코드 디코딩 적용
       String bio = extractValue(profileSection, "bio");
       String affiliation = extractValue(profileSection, "affiliation");
 
@@ -72,6 +72,18 @@ public class FetchProfile {
       e.printStackTrace();
       JOptionPane.showMessageDialog(null, "JSON 데이터를 파싱하는 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
     }
+  }
+
+  private static String decodeUnicode(String input) {
+    StringBuilder sb = new StringBuilder();
+    String[] parts = input.split("\\\\u"); // "\\u"를 기준으로 문자열 분할
+    sb.append(parts[0]);
+    for (int i = 1; i < parts.length; i++) {
+      String hex = parts[i].substring(0, 4); // 첫 4자리의 유니코드 값 추출
+      sb.append((char) Integer.parseInt(hex, 16)); // 유니코드를 문자로 변환
+      sb.append(parts[i].substring(4)); // 나머지 문자열 추가
+    }
+    return sb.toString();
   }
 
   private static String extractValue(String json, String key) {
