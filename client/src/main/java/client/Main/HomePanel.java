@@ -6,14 +6,24 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import client.Main.fetchData.FetchHome;
+import client.Main.fetchData.FetchHome.HomeData;
+
 public class HomePanel extends JPanel {
+    private HomeData homeData = FetchHome.fetchHomeData();
+    private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
+    private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
+
     public HomePanel() {
         setLayout(new BorderLayout()); // BorderLayout 사용
 
@@ -31,7 +41,7 @@ public class HomePanel extends JPanel {
         JLabel homeText1 = new JLabel("오늘도 빛나는 하루입니다, ");
         homeText1.setFont(new Font("Paperlogy", Font.BOLD, 20));
 
-        JLabel homeText2 = new JLabel("버밀리언");
+        JLabel homeText2 = new JLabel(homeData.getNickname());
         homeText2.setFont(new Font("Paperlogy", Font.BOLD, 20));
         homeText2.setForeground(Color.BLUE);
 
@@ -43,14 +53,17 @@ public class HomePanel extends JPanel {
         homeTextPanel.add(homeText3);
 
         // 명언 텍스트
-        JLabel HomeQuote = new JLabel("“Shoot for the moon. Even if you miss, you'll land among the stars.” — Norman Vincent Peale", JLabel.CENTER);
+        JLabel HomeQuote = new JLabel(
+                "<html><i>" + homeData.getSaying().getText() + "</i> - " + homeData.getSaying().getSpeaker()
+                        + "</html>",
+                JLabel.CENTER);
         HomeQuote.setFont(new Font("Paperlogy", Font.ITALIC, 13));
         HomeQuote.setBackground(new Color(240, 240, 240));
-        HomeQuote.setBorder(new LineBorder(Color.GRAY, 2, true));
+        HomeQuote.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         HomeQuote.setOpaque(true);
         HomeQuote.setAlignmentX(CENTER_ALIGNMENT);
         HomeQuote.setHorizontalAlignment(JLabel.CENTER); // 수평 가운데 정렬
-        HomeQuote.setVerticalAlignment(JLabel.CENTER);   // 수직 가운데 정렬
+        HomeQuote.setVerticalAlignment(JLabel.CENTER); // 수직 가운데 정렬
         HomeQuote.setMaximumSize(new Dimension(600, 100));
 
         // 목표 섹션
@@ -78,21 +91,17 @@ public class HomePanel extends JPanel {
 
         JPanel goalBox = new JPanel();
         goalBox.setLayout(new BoxLayout(goalBox, BoxLayout.Y_AXIS));
-        goalBox.setBorder(new LineBorder(Color.GRAY, 2, true));
+        goalBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         goalBox.setBackground(new Color(240, 240, 240));
         goalBox.setAlignmentX(CENTER_ALIGNMENT);
         goalBox.setMaximumSize(new Dimension(600, 85));
 
-        JCheckBox goal1 = new JCheckBox("1일 1백준 🖤");
-        JCheckBox goal2 = new JCheckBox("신나는 방 청소 ✏️");
-        JCheckBox goal3 = new JCheckBox("기초영작문 노트정리 📝");
-        goal1.setBackground(new Color(240, 240, 240));
-        goal2.setBackground(new Color(240, 240, 240));
-        goal3.setBackground(new Color(240, 240, 240));
-
-        goalBox.add(goal1);
-        goalBox.add(goal2);
-        goalBox.add(goal3);
+        for (int i = 0; i < homeData.getGoals().size(); i++) {
+            JCheckBox goal = new JCheckBox(" " + homeData.getGoals().get(i).getText());
+            goal.setBackground(new Color(240, 240, 240));
+            goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            goalBox.add(goal);
+        }
 
         goalPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         goalPanel.add(goalTitlePanel);
@@ -125,22 +134,17 @@ public class HomePanel extends JPanel {
 
         JPanel scheduleBox = new JPanel();
         scheduleBox.setLayout(new BoxLayout(scheduleBox, BoxLayout.Y_AXIS));
-        scheduleBox.setBorder(new LineBorder(Color.GRAY, 2, true));
+        scheduleBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         scheduleBox.setBackground(new Color(240, 240, 240));
         scheduleBox.setAlignmentX(CENTER_ALIGNMENT);
         scheduleBox.setMaximumSize(new Dimension(600, 75));
 
-        JLabel schedule1 = new JLabel(" " + "🕒 12:00 계획서 작성 팀 프로젝트 회의 🤝");
-        JLabel schedule2 = new JLabel(" " + "🕓 16:30 자료구조 튜터링 😎");
-        JLabel schedule3 = new JLabel(" " + "🕕 18:30 친구들과 저녁 약속 🔥");
-
-        schedule1.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-        schedule2.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-        schedule3.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-
-        scheduleBox.add(schedule1);
-        scheduleBox.add(schedule2);
-        scheduleBox.add(schedule3);
+        for (int i = 0; i < homeData.getPlans().size(); i++) {
+            JLabel schedule = new JLabel(
+                    homeData.getPlans().get(i).getText() + "  " + homeData.getPlans().get(i).getDate());
+            schedule.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            scheduleBox.add(schedule);
+        }
 
         schedulePanel.add(scheduleTitlePanel);
         schedulePanel.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -172,22 +176,17 @@ public class HomePanel extends JPanel {
 
         JPanel studyBox = new JPanel();
         studyBox.setLayout(new BoxLayout(studyBox, BoxLayout.Y_AXIS));
-        studyBox.setBorder(new LineBorder(Color.GRAY, 2, true));
+        studyBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         studyBox.setBackground(new Color(240, 240, 240));
         studyBox.setAlignmentX(CENTER_ALIGNMENT);
         studyBox.setMaximumSize(new Dimension(600, 75));
 
-        JLabel study1 = new JLabel(" " + "📖 ~2024.10.08. 시스템 소프트웨어 p.52");
-        JLabel study2 = new JLabel(" " + "📖 ~2024.10.14. 선형대수학 Ch.03 Vector");
-        JLabel study3 = new JLabel(" " + "📖 ~2024.10.21. 자료구조실습 개인 프로젝트");
-
-        study1.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-        study2.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-        study3.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-
-        studyBox.add(study1);
-        studyBox.add(study2);
-        studyBox.add(study3);
+        for (int i = 0; i < homeData.getStudies().size(); i++) {
+            JLabel study = new JLabel("📖 ~" +
+                    homeData.getStudies().get(i).getDate() + "  " + homeData.getStudies().get(i).getText());
+            study.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            studyBox.add(study);
+        }
 
         studyPanel.add(studyTitlePanel);
         studyPanel.add(Box.createRigidArea(new Dimension(0, 20)));
