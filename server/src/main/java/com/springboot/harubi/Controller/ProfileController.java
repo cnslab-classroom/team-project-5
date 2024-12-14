@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/plan")
 @RequiredArgsConstructor
@@ -25,11 +28,37 @@ public class ProfileController {
         return ResponseEntity.ok(profile);
     }
 
-    // 프로필 수정
-    @PutMapping("/{memberId}/profile_edit")
-    public ResponseEntity<String> updateProfile(@PathVariable Long memberId, @RequestBody ProfileUpdateRequestDto request) {
-        profileService.updateProfile(memberId, request);
-        return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다.");
+    //프로필 수정
+    @PatchMapping("/{memberId}/edit_profile")
+    public ResponseEntity<Map<String, String>> updateProfile(
+            @PathVariable Long memberId,
+            @RequestBody ProfileUpdateRequestDto requestDto) {
+
+        // 서비스 호출
+        profileService.updateProfile(memberId, requestDto);
+
+        // 응답 메시지 생성
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "200");
+
+        if (requestDto.getName() != null) {
+            response.put("name", "이름이 성공적으로 수정되었습니다.");
+        }
+        if (requestDto.getIcon() != null) {
+            response.put("icon", "아이콘이 성공적으로 수정되었습니다.");
+        }
+        if (requestDto.getStatus() != null) {
+            response.put("statusMessage", "상태가 성공적으로 수정되었습니다."); // "status" 충돌 방지
+        }
+        if (requestDto.getBio() != null) {
+            response.put("bio", "소개가 성공적으로 수정되었습니다.");
+        }
+        if (requestDto.getAffiliation() != null) {
+            response.put("affiliation", "소속이 성공적으로 수정되었습니다.");
+        }
+
+        return ResponseEntity.ok(response);
     }
+
 }
 

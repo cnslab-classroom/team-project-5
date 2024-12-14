@@ -8,6 +8,7 @@ import com.springboot.harubi.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,16 +26,28 @@ public class ProfileService {
     }
 
     // 프로필 수정
-    public void updateProfile(Long memberId, ProfileUpdateRequestDto request) {
+    @Transactional
+    public void updateProfile(Long memberId, ProfileUpdateRequestDto requestDto) {
+        // 데이터베이스에서 Member 조회
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 멤버를 찾을 수 없습니다."));
 
-        member.setName(request.getName());
-        member.setIcon(request.getIcon());
-        member.setStatus(request.getStatus());
-        member.setBio(request.getBio());
-        member.setAffiliation(request.getAffiliation());
+        // 요청에서 넘어온 값만 업데이트
+        if (requestDto.getName() != null) {
+            member.setName(requestDto.getName());
+        }
+        if (requestDto.getStatus() != null) {
+            member.setStatus(requestDto.getStatus());
+        }
+        if (requestDto.getBio() != null) {
+            member.setBio(requestDto.getBio());
+        }
+        if (requestDto.getAffiliation() != null) {
+            member.setAffiliation(requestDto.getAffiliation());
+        }
 
+        // 수정된 엔티티 저장 (Transactional로 인해 자동 저장)
         memberRepository.save(member);
     }
+
 }

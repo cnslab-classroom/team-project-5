@@ -13,7 +13,10 @@ public class Reference {
     private Long reference_id;
 
     @Column(nullable = false)
-    private String reference_link;
+    private String reference_name;
+
+    @Column(nullable = false) // 필드 이름 매칭
+    private String reference_url;
 
     // Many to One 관계 설정
     @ManyToOne (fetch = FetchType.LAZY)

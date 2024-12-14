@@ -23,6 +23,9 @@ public class Study {
     @Column (nullable = false)
     private Date study_end_date;
 
+    @Column(nullable = false)
+    private String study_emoji;
+
     // Many to One 관계 설정
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")  // 외래 키로 Member의 기본 키 참조
