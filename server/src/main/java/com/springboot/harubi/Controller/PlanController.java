@@ -3,6 +3,7 @@ package com.springboot.harubi.Controller;
 import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.PlanCheckRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
+import com.springboot.harubi.Domain.Dto.request.ScheduleWriteRequestDto;
 import com.springboot.harubi.Domain.Dto.response.*;
 import com.springboot.harubi.Service.PlanService;
 import lombok.RequiredArgsConstructor;
@@ -40,4 +41,12 @@ public class PlanController {
         PlanStatisticsListResponseDto response = planService.getStatics(member_id);
         return new BaseResponse<>(HttpStatus.OK.value(), null, response);
     }
+
+    @PostMapping("/{member_id}/schedule")
+    public BaseResponse<ScheduleWriteResponseDto> updatePlan(@PathVariable("member_id") Long member_id,
+                                                         @RequestBody ScheduleWriteRequestDto requestDto) {
+        ScheduleWriteResponseDto response = planService.updatePlan(member_id, requestDto);
+        return new BaseResponse<>(HttpStatus.OK.value(), "일정이 수정되었습니다.", response);
+    }
+
 }
