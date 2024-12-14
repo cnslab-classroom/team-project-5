@@ -187,7 +187,10 @@ public class ListPanel extends JPanel {
     studyPanel.setBackground(Color.WHITE);
 
     // 콤보박스
-    String[] names = { "빡공스터디", "객체지향프로그래밍 팀 프로젝트", "독서토론" };
+    String[] names = new String[studyItems.size()];
+    for (StudyItem item : studyItems) {
+      names[studyItems.indexOf(item)] = item.getName();
+    }
     JComboBox<String> comboBox = new JComboBox<>(names);
     comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
 
