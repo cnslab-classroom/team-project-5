@@ -204,7 +204,7 @@ public class HomePanel extends JPanel {
         centerPanel.add(schedulePanel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         centerPanel.add(studyPanel);
-
+        
         // 중앙 패널 추가
         add(centerPanel, BorderLayout.CENTER); // 중앙 패널
     }
