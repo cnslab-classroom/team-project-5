@@ -138,7 +138,7 @@ public class PlanService {
     }
 
     private List<PlanStaticsResponseDto> getGoalStatics(Member member) {
-        // 월요일부터 일요일까지 쭉 가져오는데, 7일×54주를 가져와야함
+        // 월요일부터 일요일까지 쭉 가져오는데, 7일×53주를 가져와야함
         // 하루하루의 달성률(그날 goal들의 달성률 계산해서)과 날짜를 반환해줘야함
 
         // 오늘 날짜 기준 53주 범위 계산
@@ -146,7 +146,7 @@ public class PlanService {
         Date startDate = dateRange[0];
         Date endDate = dateRange[1];
 
-        // 53위 범위의 GoalDateStatus 가져오기
+        // 53주 범위의 GoalDateStatus 가져오기
         List<GoalDateStatus> statuses = goalDateStatusRepository.findByMemberAndDateRange(member, startDate, endDate);
 
         // 날짜별로 데이터 그룹화
@@ -251,13 +251,13 @@ public class PlanService {
         Plan plan = new Plan();
         plan.setPlan_text(requestDto.getPlan_text());
         plan.setPlan_date(requestDto.getGoal_date());
+        plan.setMember(member);
+
+        member.getPlans().add(plan);
+
         Plan updatedPlan = planRepository.save(plan);
 
         // 응답 DTO 생성 및 반환
-        return new ScheduleWriteResponseDto(
-                updatedPlan.getPlan_id(),
-                updatedPlan.getPlan_text(),
-                updatedPlan.getPlan_date()
-        );
+        return new ScheduleWriteResponseDto(updatedPlan.getPlan_id());
     }
 }
