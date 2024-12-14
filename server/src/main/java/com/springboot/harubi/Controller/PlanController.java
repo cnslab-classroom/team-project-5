@@ -46,7 +46,7 @@ public class PlanController {
     public BaseResponse<ScheduleWriteResponseDto> updatePlan(@PathVariable("member_id") Long member_id,
                                                          @RequestBody ScheduleWriteRequestDto requestDto) {
         ScheduleWriteResponseDto response = planService.updatePlan(member_id, requestDto);
-        return new BaseResponse<>(HttpStatus.OK.value(), "일정이 수정되었습니다.", response);
+        return new BaseResponse<>(HttpStatus.OK.value(), "일정이 추가되었습니다.", response);
     }
 
 }
