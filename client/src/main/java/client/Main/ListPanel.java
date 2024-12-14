@@ -349,8 +349,12 @@ public class ListPanel extends JPanel {
   // 멤버 추가 Dialog
   private void showMemberInputDialog() {
     String input = JOptionPane.showInputDialog(this, "추가할 멤버를 입력하세요:", "멤버 추가", JOptionPane.PLAIN_MESSAGE);
+
     if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, "멤버가 추가되었습니다: " + input);
+      // 서버로 POST 요청 전송
+      FetchStudyListAdd.sendPostMember(input, selectGroupId);
+    } else {
+      JOptionPane.showMessageDialog(this, "입력된 값이 없습니다. 다시 입력해 주세요.", "오류", JOptionPane.ERROR_MESSAGE);
     }
   }
 
