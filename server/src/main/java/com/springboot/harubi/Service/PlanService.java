@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,16 +60,18 @@ public class PlanService {
         Member member = memberRepository.findById(member_id)
                 .orElseThrow(() -> new BaseException(404, "존재하지 않는 회원입니다."));
 
-        Date today = new Date();
+        Date today = new Date(); // 오늘 날짜
         List<Goal> goals = goalRepository.findByMember(member);
 
         List<PlanReadResponseDto> goalDtos = goals.stream()
                 .map(goal -> {
+                    // GoalDateStatus에서 오늘 날짜와 같은 항목 찾기
                     GoalDateStatus todayGoalStatus = goal.getGoalDateStatuses().stream()
-                            .filter(status -> isSameDay(status.getGoal_date(), today))
-                            .findFirst()
+                            .filter(status -> isSameDay(status.getGoal_date(), today)) // 날짜 비교
+                            .findFirst() // 첫 번째 항목 반환
                             .orElseThrow(() -> new BaseException(404, "오늘의 목표 상태가 없습니다."));
-                    // 오늘 날짜의 상태 바탕으로 반환할 Dto
+
+                    // DTO 반환
                     return new PlanReadResponseDto(goal.getGoal_text(), todayGoalStatus.isGoal_status());
                 })
                 .collect(Collectors.toList());
@@ -76,13 +79,15 @@ public class PlanService {
         return new PlanListResponseDto(goalDtos);
     }
 
+
     private boolean isSameDay(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
         cal2.setTime(date2);
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
     }
 
     public PlanCheckResponseDto checkPlans(Long member_id, PlanCheckRequestDto planCheckRequestDto) {
