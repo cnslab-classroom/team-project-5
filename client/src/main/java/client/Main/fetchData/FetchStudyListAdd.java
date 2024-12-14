@@ -159,6 +159,7 @@ public class FetchStudyListAdd {
       String jsonInputString = String.format(
           "{ \"reference_name\": \"%s\", \"reference_url\": \"%s\" }", reference_name, reference_url);
 
+      System.out.println("json:"+jsonInputString);
       // 서버로 데이터 전송
       try (java.io.OutputStream os = conn.getOutputStream()) {
         byte[] input = jsonInputString.getBytes("utf-8");
