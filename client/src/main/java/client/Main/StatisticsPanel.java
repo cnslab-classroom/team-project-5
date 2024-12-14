@@ -21,12 +21,19 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import client.Main.fetchData.FetchStatistics;
+import client.Main.model.Statistics;
+
 public class StatisticsPanel extends JPanel {
+    private FetchStatistics.StatisticsData statisticsData;
 
     public StatisticsPanel() {
         setLayout(new BorderLayout(10, 10)); // 패널 간 간격
         setBorder(new EmptyBorder(30, 30, 30, 30)); // 전체 여백 설정
         setBackground(Color.WHITE);
+
+        // 서버에서 통계 데이터 가져오기
+        statisticsData = FetchStatistics.fetchStatisticsData();
 
         // 1. 상단 영역 (텍스트와 그래프)
         JPanel topPanel = createTopPanel();
@@ -97,24 +104,27 @@ public class StatisticsPanel extends JPanel {
         // 요일 배열
         String[] days = { "M", "T", "W", "T", "F", "S", "S" };
 
+        // 날짜별 데이터를 Map으로 변환 (날짜 -> 달성도)
+        Map<String, Integer> achievementMap = new HashMap<>();
+        for (Statistics stat : statisticsData.getStatics()) {
+            achievementMap.put(stat.getDate(), stat.getAchievement());
+        }
+
+        // 서버에서 받은 날짜 리스트 (yyyy-MM-dd)
+        List<String> dateList = new ArrayList<>(achievementMap.keySet());
+
+        // 셀을 채우기 위한 날짜 인덱스
+        int dateIndex = 0;
+
         // 그리드 생성
         for (int row = 0; row < 7; row++) {
             // 1. 각 행의 첫 번째 셀에 요일 추가
             JLabel dayLabel = new JLabel(days[row], SwingConstants.CENTER);
-            dayLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            dayLabel.setFont(new Font("paperlogy", Font.BOLD, 14));
+            dayLabel.setForeground(row >= 5 ? (row == 5 ? Color.BLUE : Color.RED) : Color.BLACK);
+            graphPanel.add(dayLabel);
 
-            // 토요일과 일요일 색상 설정
-            if (row == 5) {
-                dayLabel.setForeground(Color.BLUE); // 토요일
-            } else if (row == 6) {
-                dayLabel.setForeground(Color.RED); // 일요일
-            } else {
-                dayLabel.setForeground(Color.BLACK); // 기본 요일
-            }
-
-            graphPanel.add(dayLabel); // 요일 추가
-
-            // 2. 나머지 53개의 셀 추가
+            // 나머지 53개의 셀 추가 (1년 53주)
             for (int col = 0; col < 53; col++) {
                 JPanel cell = new JPanel() {
                     @Override
@@ -122,8 +132,16 @@ public class StatisticsPanel extends JPanel {
                         return new Dimension(2, 2); // 셀 크기 고정
                     }
                 };
-                int value = (int) (Math.random() * 100); // 0~100 랜덤 값
-                cell.setBackground(getColorForValue(value));
+                // 날짜에 맞춰 색상 설정
+                if (dateIndex < dateList.size()) {
+                    String currentDate = dateList.get(dateIndex);
+                    int value = achievementMap.getOrDefault(currentDate, 0);
+                    cell.setBackground(getColorForValue(value));
+                    dateIndex++; // 다음 날짜로 이동
+                } else {
+                    cell.setBackground(new Color(220, 220, 220)); // 데이터가 없는 경우 회색
+                }
+
                 graphPanel.add(cell);
             }
         }
