@@ -9,16 +9,32 @@ import javax.swing.border.Border;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import client.Main.fetchData.FetchStudyList;
+import client.Main.model.StudyItem;
 
 public class ListPanel extends JPanel {
   private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
   private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
 
+  private List<StudyItem> studyItems = new ArrayList<>();
+
   public ListPanel() {
     setLayout(new BorderLayout(10, 10)); // 패널 간 간격
     setBorder(new EmptyBorder(30, 30, 30, 30)); // 전체 여백 설정
     setBackground(Color.WHITE);
+
+    // 서버에서 데이터 가져오기
+    fetchDataFromServer();
 
     // 1. 상단 영역 (텍스트와 그래프)
     JPanel topPanel = studyListPanel();
@@ -28,6 +44,11 @@ public class ListPanel extends JPanel {
     JPanel middlePanel = studyPanel();
     add(middlePanel, BorderLayout.CENTER);
 
+  }
+
+  private void fetchDataFromServer() {
+    // fetchStudyList 클래스에서 데이터 가져오기
+    studyItems = FetchStudyList.fetchData();
   }
 
   private JPanel studyListPanel() {
@@ -54,44 +75,29 @@ public class ListPanel extends JPanel {
 
     studyListPanel.add(titlePanel, BorderLayout.NORTH);
 
-    JPanel ListPanel = new JPanel();
-    ListPanel.setLayout(new BoxLayout(ListPanel, BoxLayout.Y_AXIS));
-    ListPanel.setBackground(new Color(240, 240, 240));
-    ListPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+    JPanel listPanel = new JPanel();
+    listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+    listPanel.setBackground(new Color(240, 240, 240));
+    listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, new EmptyBorder(10, 10, 0, 10)));
 
-    String[] emoge = { "🍀", "💡", "📚" };
-    String[] name = { "빡공스터디", "객체지향프로그래밍 팀 프로젝트", "독서토론" };
-    boolean[] favorite = { true, true, false };
-
-    for (int i = 0; i < 3; i++) {
+    // 서버에서 가져온 데이터를 기반으로 UI 생성
+    for (StudyItem item : studyItems) {
       JPanel studyPanel = new JPanel(new BorderLayout());
+      studyPanel.setBackground(new Color(240, 240, 240));
+      studyPanel.setBorder(new EmptyBorder(0, 0, 10, 0)); // 내부 여백
 
-      JLabel imogeLabel = new JLabel(emoge[i] + " ");
-      imogeLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      imogeLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      studyPanel.add(imogeLabel, BorderLayout.WEST);
+      JLabel emojiLabel = new JLabel(item.getEmoji());
+      emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      emojiLabel.setBorder(new EmptyBorder(0, 0, 0, 5)); // 내부 여백
+      studyPanel.add(emojiLabel, BorderLayout.WEST);
 
-      JLabel nameLabel = new JLabel(name[i]);
+      JLabel nameLabel = new JLabel(item.getName());
       nameLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      nameLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
       studyPanel.add(nameLabel, BorderLayout.CENTER);
 
-      if (favorite[i]) {
-        JButton favoriteButton = new JButton("★");
-        favoriteButton.setFont(new Font("paperlogy", Font.PLAIN, 20));
-        favoriteButton.setHorizontalAlignment(SwingConstants.CENTER); // 오른쪽 정렬
-        studyPanel.add(favoriteButton, BorderLayout.EAST);
-      } else {
-        JButton favoriteButton = new JButton("☆");
-        favoriteButton.setFont(new Font("paperlogy", Font.PLAIN, 20));
-        favoriteButton.setHorizontalAlignment(SwingConstants.CENTER); // 오른쪽 정렬
-        studyPanel.add(favoriteButton, BorderLayout.EAST);
-      }
-
-      ListPanel.add(studyPanel);
-      studyListPanel.add(ListPanel, BorderLayout.CENTER);
-
+      listPanel.add(studyPanel);
     }
+    studyListPanel.add(listPanel, BorderLayout.CENTER);
 
     return studyListPanel;
   }
@@ -102,7 +108,10 @@ public class ListPanel extends JPanel {
     studyPanel.setBackground(Color.WHITE);
 
     // 콤보박스
-    String[] names = { "빡공스터디", "객체지향프로그래밍 팀 프로젝트", "독서토론" };
+    String[] names = new String[studyItems.size()];
+    for (StudyItem item : studyItems) {
+      names[studyItems.indexOf(item)] = item.getName();
+    }
     JComboBox<String> comboBox = new JComboBox<>(names);
     comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
 

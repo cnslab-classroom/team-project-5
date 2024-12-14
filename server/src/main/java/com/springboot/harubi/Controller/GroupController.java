@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class GroupController {
     private final GroupService groupService;
-
     @PostMapping("/{member_id}/list")
     public BaseResponse<MakeGroupResponseDto> makeGroup(@PathVariable("member_id") Long member_id,
-                                                        @RequestBody MakeGroupRequestDto makeGroupRequestDto) {
+            @RequestBody MakeGroupRequestDto makeGroupRequestDto) {
         MakeGroupResponseDto response = groupService.makesGroup(member_id, makeGroupRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹이 추가되었습니다", response);
     }
@@ -42,7 +41,7 @@ public class GroupController {
 
     @PostMapping("/{group_id}/add_study")
     public BaseResponse<StudyAddResponseDto> makeStudyPlan(@PathVariable("group_id") Long group_id,
-                                                           @RequestBody StudyAddRequestDto studyAddRequestDto) {
+            @RequestBody StudyAddRequestDto studyAddRequestDto) {
         StudyAddResponseDto response = groupService.makePlan(group_id, studyAddRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 목표가 추가되었습니다", response);
     }
@@ -58,7 +57,7 @@ public class GroupController {
 
     @PostMapping("/{group_id}/invite")
     public BaseResponse inviteMember(@PathVariable("group_id") Long group_id,
-                                     @RequestBody MemberInviteRequestDto memberInviteRequestDto) {
+            @RequestBody MemberInviteRequestDto memberInviteRequestDto) {
         groupService.invitesMember(group_id, memberInviteRequestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "스터디 그룹 멤버가 추가되었습니다", null);
     }
