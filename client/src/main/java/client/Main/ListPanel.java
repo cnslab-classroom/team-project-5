@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import client.Main.fetchData.FetchStudyList;
+import client.Main.model.StudyItem;
+
 public class ListPanel extends JPanel {
   private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
   private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
@@ -43,91 +46,9 @@ public class ListPanel extends JPanel {
 
   }
 
-  private String decodeUnicode(String input) {
-    StringBuilder sb = new StringBuilder();
-    Pattern pattern = Pattern.compile("\\\\u([0-9A-Fa-f]{4})");
-    Matcher matcher = pattern.matcher(input);
-
-    int lastEnd = 0;
-    while (matcher.find()) {
-      sb.append(input, lastEnd, matcher.start());
-      int unicodeValue = Integer.parseInt(matcher.group(1), 16);
-      sb.append((char) unicodeValue);
-      lastEnd = matcher.end();
-    }
-    sb.append(input.substring(lastEnd));
-    return sb.toString();
-  }
-
   private void fetchDataFromServer() {
-    try {
-      URL url = new URL("http://localhost:8080/group/1/list"); // 서버 URL
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-
-      int responseCode = conn.getResponseCode();
-      System.out.println("서버 응답 코드: " + responseCode); // HTTP 상태 코드 출력
-
-      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-      StringBuilder response = new StringBuilder();
-      String line;
-
-      while ((line = br.readLine()) != null) {
-        response.append(line);
-      }
-      br.close();
-
-      // 서버에서 받은 JSON 데이터를 로그로 출력
-      System.out.println("서버 응답 데이터: " + response.toString());
-
-      // JSON 데이터 파싱
-      parseJsonData(response.toString());
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      JOptionPane.showMessageDialog(this, "서버에서 데이터를 가져오지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-    }
-  }
-
-  private void parseJsonData(String json) {
-    studyItems.clear(); // 기존 데이터 초기화
-
-    try {
-      // JSON 전체에서 "study_group" 배열만 추출
-      String studyGroupJson = json.substring(json.indexOf("[") + 1, json.lastIndexOf("]"));
-
-      // 배열을 개별 객체로 나눔
-      String[] items = studyGroupJson.split("\\},\\{");
-
-      for (String item : items) {
-        item = decodeUnicode(item); // 유니코드 변환 추가
-        item = item.replace("{", "").replace("}", "").replace("\"", "");
-
-        String name = "", emoji = "";
-        String[] pairs = item.split(",");
-
-        for (String pair : pairs) {
-          String[] keyValue = pair.split(":");
-          if (keyValue.length == 2) {
-            String key = keyValue[0].trim();
-            String value = keyValue[1].trim();
-            if (key.equals("study_group_name")) {
-              name = value;
-            } else if (key.equals("study_emoji")) {
-              emoji = value;
-            }
-          }
-        }
-
-        // StudyItem 객체 생성 및 리스트에 추가
-        if (!name.isEmpty() && !emoji.isEmpty()) {
-          studyItems.add(new StudyItem(emoji, name));
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      JOptionPane.showMessageDialog(this, "JSON 데이터를 파싱하는 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-    }
+    // fetchStudyList 클래스에서 데이터 가져오기
+    studyItems = FetchStudyList.fetchData();
   }
 
   private JPanel studyListPanel() {
@@ -415,25 +336,6 @@ public class ListPanel extends JPanel {
     String input = JOptionPane.showInputDialog(this, message, title, JOptionPane.PLAIN_MESSAGE);
     if (input != null && !input.trim().isEmpty()) {
       JOptionPane.showMessageDialog(this, title + ": " + input);
-    }
-  }
-
-  // StudyItem 클래스
-  static class StudyItem {
-    private String emoji;
-    private String name;
-
-    public StudyItem(String emoji, String name) {
-      this.emoji = emoji;
-      this.name = name;
-    }
-
-    public String getEmoji() {
-      return emoji;
-    }
-
-    public String getName() {
-      return name;
     }
   }
 
