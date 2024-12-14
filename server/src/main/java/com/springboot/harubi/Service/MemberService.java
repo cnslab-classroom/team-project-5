@@ -22,6 +22,25 @@ public class MemberService {
         memberRepository.save(convertToMember(authRequestDto));
     }
 
+    @Transactional
+    public void tempSave(AuthRequestDto authRequestDto) {
+        if (memberRepository.existsByEmail(authRequestDto.getEmail())) {
+            throw new BaseException(400, "이미 가입된 이메일입니다.");
+        }
+        Member member = convertToMember(authRequestDto);
+        member.setAgreed(false);
+        memberRepository.save(member);
+    }
+
+    @Transactional
+    public void completeSignUp(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BaseException(404, "회원 정보가 존재하지 않습니다."));
+
+        member.setAgreed(true);
+        memberRepository.save(member);
+    }
+
     private void validateAuthReqeust(AuthRequestDto authRequestDto) {
         if (authRequestDto.getName() == null) {
             throw new BaseException(400, "이름을 입력해 주세요.");
