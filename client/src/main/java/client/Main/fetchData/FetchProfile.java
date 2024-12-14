@@ -97,6 +97,62 @@ public class FetchProfile {
     return "";
   }
 
+  public static void sendPatchRequest(String name, String emoji, String intro, String affiliation) {
+    try {
+      // 서버 URL
+      URL url = new URL("http://localhost:8080/plan/1/profile");
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+      // POST 요청 설정 + PATCH 동작 설정
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
+      conn.setDoOutput(true);
+
+      // JSON 데이터 생성
+      String jsonInputString = String.format(
+          "{ \"name\": \"%s\", \"icon\": \"%s\", \"bio\": \"%s\", \"affiliation\": \"%s\" }",
+          name, emoji, intro, affiliation);
+
+      // 서버로 데이터 전송
+      try (java.io.OutputStream os = conn.getOutputStream()) {
+        byte[] input = jsonInputString.getBytes("utf-8");
+        os.write(input, 0, input.length);
+      }
+
+      // 응답 코드 확인
+      int responseCode = conn.getResponseCode();
+      System.out.println("서버 응답 코드: " + responseCode);
+
+      BufferedReader br;
+      if (responseCode >= 200 && responseCode < 300) {
+        br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+      } else {
+        br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+      }
+
+      // 응답 메시지 읽기
+      StringBuilder response = new StringBuilder();
+      String responseLine;
+      while ((responseLine = br.readLine()) != null) {
+        response.append(responseLine.trim());
+      }
+      br.close();
+
+      System.out.println("서버 응답: " + response.toString());
+
+      if (responseCode >= 200 && responseCode < 300) {
+        JOptionPane.showMessageDialog(null, "프로필이 성공적으로 수정되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
+      } else {
+        JOptionPane.showMessageDialog(null, "프로필 수정 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
   // 내부 데이터 클래스
   public static class ProfileData {
     private Streak streak;

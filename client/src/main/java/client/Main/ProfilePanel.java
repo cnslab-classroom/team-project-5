@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.FetchProfile;
+import client.Main.model.Profile;
 
 public class ProfilePanel extends JPanel {
 
@@ -63,7 +64,7 @@ public class ProfilePanel extends JPanel {
     JButton editButton = new JButton("프로필 수정");
     editButton.setFont(new Font("Paperlogy", Font.PLAIN, 12));
     editButton.setBackground(Color.white);
-    editButton.addActionListener(e -> showProfileInputDialog());
+    editButton.addActionListener(e -> showProfileInputDialog(profileData.getProfile()));
     namePanel.add(editButton);
 
     mainPanel.add(namePanel);
@@ -154,12 +155,12 @@ public class ProfilePanel extends JPanel {
   }
 
   // 프로필 편집 Dialog
-  private void showProfileInputDialog() {
-    // 입력 필드 생성
-    JTextField inputName = new JTextField(20);
-    JTextField inputEmoji = new JTextField(20);
-    JTextField inputIntroOneLine = new JTextField(20);
-    JTextField inputAffiliation = new JTextField(20);
+  private void showProfileInputDialog(Profile currentProfile) {
+    // 입력 필드 생성 (기존 값 설정)
+    JTextField inputName = new JTextField(currentProfile.getName(), 20);
+    JTextField inputEmoji = new JTextField(currentProfile.getIcon(), 20);
+    JTextField inputIntroOneLine = new JTextField(currentProfile.getBio(), 20);
+    JTextField inputAffiliation = new JTextField(currentProfile.getAffiliation(), 20);
 
     // 입력 패널 생성
     JPanel panel = new JPanel();
@@ -191,15 +192,11 @@ public class ProfilePanel extends JPanel {
 
       // 입력 확인
       if (!name.isEmpty() && !emoji.isEmpty() && !intro.isEmpty() && !affiliation.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-            String.format("이름: %s\n이모지: %s\n한 줄 소개: %s\n소속: %s",
-                name, emoji, intro, affiliation),
-            "프로필 정보",
-            JOptionPane.INFORMATION_MESSAGE);
+        // 서버에 PATCH 요청 보내기
+        FetchProfile.sendPatchRequest(name, emoji, intro, affiliation);
       } else {
         JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요!", "입력 오류", JOptionPane.ERROR_MESSAGE);
       }
     }
   }
-
 }
