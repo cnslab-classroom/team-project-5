@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import client.Main.fetchData.SendPostTCA;
 import client.Frame;
+import client.Main.fetchData.SendPostTCA;
 
 public class TCAPanel extends JPanel {
     public TCAPanel(Frame parentFrame) {
@@ -79,9 +79,6 @@ public class TCAPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (agreeCheckBox.isSelected()) {
-                    // 서버에 동의 데이터 전송
-                    boolean agreement = true; // 항상 true 값 전송
-                    SendPostTCA.sendPostTCA(agreement);
 
                     // 동의 후 확인 메시지 표시
                     int result = JOptionPane.showConfirmDialog(
@@ -91,6 +88,9 @@ public class TCAPanel extends JPanel {
                             JOptionPane.OK_CANCEL_OPTION
                     );
                     if (result == JOptionPane.OK_OPTION) {
+                        // 서버에 동의 데이터 전송
+                        boolean agreement = true; // 항상 true 값 전송
+                        SendPostTCA.sendPostTCA(agreement);
                         parentFrame.switchToPanel(new SuccessSignUpPanel(parentFrame));
                     }
                 }

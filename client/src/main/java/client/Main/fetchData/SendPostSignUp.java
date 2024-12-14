@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 public class SendPostSignUp {
 
-    public static void sendPostSignUp(String name, String signId, String password, String nickname, String email, boolean agreed) {
+    public static boolean sendPostSignUp(String name, String signId, String password, String nickname, String email, boolean agreed) {
         try {
             // 서버 URL
             URL url = new URL("http://localhost:8080/auth/signUp");
@@ -51,14 +51,20 @@ public class SendPostSignUp {
             // 응답 처리
             if (responseCode == 200) {
                 JOptionPane.showMessageDialog(null, "회원가입 성공: " + response.toString());
-            } else {
+                return true;
+            }
+            else {
                 // 오류 메시지 처리
                 JOptionPane.showMessageDialog(null, "회원가입 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
+                return false;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
+
+        
     }
 }
