@@ -8,14 +8,14 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-public class SendPostGoal {
+public class SendPostSchedule {
 
-    public static void sendPostGoal(String goalText, String goalStartDate, String goalEndDate) {
+    public static void sendPostSchedule(String plan_text, String goal_date) {
         try {
-            // 서버 URL 설정
-            URL url = new URL("http://localhost:8080/plan/1/daily");
+            // 서버 URL
+            URL url = new URL("http://localhost:8080/plan/1/schedule");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            
+
             // POST 요청 설정
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
@@ -23,9 +23,8 @@ public class SendPostGoal {
 
             // JSON 데이터 생성
             String jsonInputString = String.format(
-                "{\"goal_text\": \"%s\", \"goal_start_date\": \"%s\", \"goal_end_date\": \"%s\"}",
-                goalText, goalStartDate, goalEndDate
-            );
+                "{\"plan_text\": \"%s\", \"goal_date\": \"%s\"}",
+                plan_text, goal_date);
 
             // 요청 데이터 로그
             System.out.println("POST JSON: " + jsonInputString);
@@ -52,9 +51,12 @@ public class SendPostGoal {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "목표 추가 성공: " + response.toString());
+                // 성공 메시지 파싱
+                System.out.println("서버 응답: " + response.toString());
+                JOptionPane.showMessageDialog(null, "스케줄 추가 완료: " + response.toString());
             } else {
-                JOptionPane.showMessageDialog(null, "목표 추가 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
+                System.err.println("서버 응답: " + response.toString());
+                JOptionPane.showMessageDialog(null, "오류 발생: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception e) {
