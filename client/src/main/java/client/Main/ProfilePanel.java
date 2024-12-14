@@ -16,7 +16,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import client.Main.fetchData.FetchProfile;
+
 public class ProfilePanel extends JPanel {
+
+  private FetchProfile.ProfileData profileData = FetchProfile.fetchProfileData();
+
   public ProfilePanel() {
     setLayout(new BorderLayout(10, 10));
     setBackground(Color.WHITE);
@@ -50,7 +55,7 @@ public class ProfilePanel extends JPanel {
     JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0)); // 왼쪽 정렬
     namePanel.setBackground(new Color(240, 240, 240));
 
-    JLabel name = new JLabel("김수오 🥰");
+    JLabel name = new JLabel(profileData.getProfile().getName());
     name.setBorder(new EmptyBorder(10, 0, 10, 0));
     name.setFont(new Font("Paperlogy", Font.BOLD, 16));
     namePanel.add(name);
@@ -77,18 +82,27 @@ public class ProfilePanel extends JPanel {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
     panel.setPreferredSize(new Dimension(300, 100));
-    panel.setBackground(new Color(34, 139, 34)); // 초록색
     panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    JLabel streakText = new JLabel();
+    JLabel streakMessage = new JLabel();
 
-    JLabel streakText = new JLabel("👍", SwingConstants.LEFT);
+    if (profileData.getStreak().isTodayGoalCompleted()) {
+      panel.setBackground(new Color(34, 139, 34)); // 초록색
+      streakText = new JLabel("👍", SwingConstants.LEFT);
+      streakMessage = new JLabel("오늘 목표를 완료했어요!", SwingConstants.CENTER);
+    } else {
+      panel.setBackground(new Color(255, 69, 0)); // 주황색
+      streakText = new JLabel("💪", SwingConstants.LEFT);
+      streakMessage = new JLabel("연속으로 목표를 완료해보아요!", SwingConstants.CENTER);
+    }
+
     streakText.setFont(new Font("Paperlogy", Font.BOLD, 20));
     streakText.setForeground(Color.WHITE);
 
-    JLabel streakDays = new JLabel("219일", SwingConstants.CENTER);
+    JLabel streakDays = new JLabel(String.valueOf(profileData.getStreak().getStreakDays()), SwingConstants.CENTER);
     streakDays.setFont(new Font("Paperlogy", Font.BOLD, 50));
     streakDays.setForeground(Color.WHITE);
 
-    JLabel streakMessage = new JLabel("오늘 목표를 완료했어요!", SwingConstants.CENTER);
     streakMessage.setFont(new Font("Paperlogy", Font.PLAIN, 14));
     streakMessage.setForeground(Color.WHITE);
 
@@ -107,23 +121,23 @@ public class ProfilePanel extends JPanel {
     panel.setBackground(Color.WHITE);
     panel.setPreferredSize(new Dimension(600, 150));
 
-    JLabel introLabel = new JLabel("<html><b>print(\"Hello, World!\")</b></html>");
+    JLabel introLabel = new JLabel("<html><b>" + profileData.getProfile().getBio() + "</b></html>");
     introLabel.setFont(new Font("paperlogy", Font.BOLD, 30));
     introLabel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    JLabel nameLabel = new JLabel("이름: 김수오");
+    JLabel nameLabel = new JLabel("이름: " + profileData.getProfile().getName());
     nameLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
     nameLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
 
-    JLabel emojiLabel = new JLabel("이모지: 🥰");
+    JLabel emojiLabel = new JLabel("이모지: " + profileData.getProfile().getIcon());
     emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
     emojiLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
 
-    JLabel introOneLineLabel = new JLabel("한 줄 소개: print(\"Hello, World!\")");
+    JLabel introOneLineLabel = new JLabel("한 줄 소개: " + profileData.getProfile().getBio());
     introOneLineLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
     introOneLineLabel.setBorder(new EmptyBorder(5, 10, 0, 10));
 
-    JLabel affiliationLabel = new JLabel("소속: Kwangwoon Univ.");
+    JLabel affiliationLabel = new JLabel("소속: " + profileData.getProfile().getAffiliation());
     affiliationLabel.setFont(new Font("paperlogy", Font.PLAIN, 14));
     affiliationLabel.setBorder(new EmptyBorder(5, 10, 10, 10));
 
