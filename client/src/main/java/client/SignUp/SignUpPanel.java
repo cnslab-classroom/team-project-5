@@ -11,13 +11,22 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import client.Frame;
+import client.Main.fetchData.SendPostSignUp;
 import client.RoundedButton;
 
 public class SignUpPanel extends JPanel {
+    // 입력 필드
+    private JTextField idField;
+    private JTextField passwordField;
+    private JTextField nameField;
+    private JTextField emailField;
+    private JTextField nicknameField;
+
     public SignUpPanel(Frame parentFrame) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // 수직 정렬
 
@@ -28,30 +37,32 @@ public class SignUpPanel extends JPanel {
         welcomeLabel.setForeground(Color.BLACK);
 
         // 아이디 필드
-        JPanel idPanel = createInputField("아이디🔑", true);
-        idPanel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
+        idField = new JTextField();
+        JPanel idPanel = createInputField("아이디🔑", idField, true);
         idPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        idPanel.setBackground(new Color(240, 240, 240));
-        idPanel.setOpaque(false);
 
         // 비밀번호 필드
-        JPanel passwordPanel = createInputField("비밀번호🔒", true);
+        passwordField = new JTextField();
+        JPanel passwordPanel = createInputField("비밀번호🔒", passwordField, true);
         passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 이름 필드
-        JPanel namePanel = createInputField("이름🧑", true);
+        nameField = new JTextField();
+        JPanel namePanel = createInputField("이름🧑", nameField, true);
         namePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 이메일 필드
-        JPanel emailPanel = createInputField("이메일✉️", true);
+        emailField = new JTextField();
+        JPanel emailPanel = createInputField("이메일✉️", emailField, true);
         emailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 별명 필드
-        JPanel nicknamePanel = createInputField("별명🌟", true);
+        nicknameField = new JTextField();
+        JPanel nicknamePanel = createInputField("별명🌟", nicknameField, true);
         nicknamePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 다음 버튼
-        RoundedButton nextButton = new RoundedButton("다음", new Color(0, 153, 0));
+        RoundedButton nextButton = new RoundedButton("회원가입", new Color(0, 153, 0));
         nextButton.setFont(new Font("Paperlogy", Font.BOLD, 16));
         nextButton.setBackground(new Color(0, 153, 0)); // 초록색 버튼
         nextButton.setForeground(Color.WHITE); // 버튼 텍스트 색상
@@ -74,16 +85,18 @@ public class SignUpPanel extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 30))); // 간격
         add(nextButton); // 다음 버튼 추가
 
-        // 버튼 클릭 이벤트, 약관 동의 패널로 전환
+        // 버튼 클릭 이벤트 - 회원가입 요청
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentFrame.switchToPanel(new TCAPanel(parentFrame));
+                if(sendSignUpData())
+                    parentFrame.switchToPanel(new TCAPanel(parentFrame));
             }
         });
     }
 
-    private JPanel createInputField(String labelText, boolean isRequired) {
+    // 입력 필드 생성 메서드
+    private JPanel createInputField(String labelText, JTextField textField, boolean isRequired) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(new Color(240, 240, 240));
@@ -112,7 +125,6 @@ public class SignUpPanel extends JPanel {
         }
 
         // 입력 필드
-        JTextField textField = new JTextField(20);
         textField.setMaximumSize(new Dimension(300, 40));
         textField.setFont(new Font("Paperlogy", Font.PLAIN, 14));
 
@@ -122,5 +134,25 @@ public class SignUpPanel extends JPanel {
         panel.add(textField); // 텍스트 필드 추가
 
         return panel;
+    }
+
+    // 회원가입 데이터 전송 메서드
+    private boolean sendSignUpData() {
+        String id = idField.getText();
+        String password = passwordField.getText();
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String nickname = nicknameField.getText();
+        boolean agreed = true; // 약관 동의 기본 값
+
+        // 데이터 검증 (필요 시 추가)
+        if (id.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // SendPostSignUp 호출
+        SendPostSignUp.sendPostSignUp(name, id, password, nickname, email, agreed);
+        return true;
     }
 }
