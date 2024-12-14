@@ -8,7 +8,6 @@ import com.springboot.harubi.Domain.Dto.response.GroupDetailResponseDto;
 import com.springboot.harubi.Domain.Dto.response.GroupListResponseDto;
 import com.springboot.harubi.Domain.Dto.response.MakeGroupResponseDto;
 import com.springboot.harubi.Service.GroupService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +40,7 @@ public class GroupController {
     @PostMapping("/{group_id}/add_reference")
     public BaseResponse<AddReferenceResponseDto> addReference(
             @PathVariable Long group_id,
-            @Valid @RequestBody AddReferenceRequestDto requestDto) {
+            @RequestBody AddReferenceRequestDto requestDto) {
 
         AddReferenceResponseDto responseDto = groupService.addReference(group_id, requestDto);
         return new BaseResponse<>(HttpStatus.OK.value(), "레퍼런스가 추가되었습니다.", responseDto);
