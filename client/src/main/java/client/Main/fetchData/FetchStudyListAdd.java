@@ -144,4 +144,61 @@ public class FetchStudyListAdd {
     }
   }
 
+  public static void sendPostReference(String reference_name, String reference_url, int groupId) {
+    try {
+      // 서버 URL
+      URL url = new URL("http://localhost:8080/group/" + groupId + "/add_reference");
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+      // POST 요청 설정
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setDoOutput(true);
+
+      // JSON 데이터 생성
+      String jsonInputString = String.format(
+          "{ \"reference_name\": \"%s\", \"reference_url\": \"%s\" }", reference_name, reference_url);
+
+      // 서버로 데이터 전송
+      try (java.io.OutputStream os = conn.getOutputStream()) {
+        byte[] input = jsonInputString.getBytes("utf-8");
+        os.write(input, 0, input.length);
+      }
+
+      // 응답 코드 확인
+      int responseCode = conn.getResponseCode();
+      System.out.println("서버 응답 코드: " + responseCode);
+
+      // 서버 응답 확인
+      BufferedReader br;
+      if (responseCode >= 200 && responseCode < 300) {
+        br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+      } else {
+        br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"));
+      }
+
+      StringBuilder response = new StringBuilder();
+      String responseLine;
+      while ((responseLine = br.readLine()) != null) {
+        response.append(responseLine.trim());
+      }
+      br.close();
+
+      System.out.println("서버 응답: " + response.toString());
+
+      // JSON에서 message 필드 추출
+      String message = extractJsonField(response.toString(), "message");
+
+      // 성공 메시지
+      if (responseCode >= 200 && responseCode < 300) {
+        JOptionPane.showMessageDialog(null, "레퍼런스가 추가되었습니다: " + reference_name);
+      } else {
+        JOptionPane.showMessageDialog(null, "오류 응답: " + message, "서버 오류", JOptionPane.ERROR_MESSAGE);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+    }
+  }
 }

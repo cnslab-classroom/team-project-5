@@ -360,11 +360,31 @@ public class ListPanel extends JPanel {
 
   // 레퍼런스 추가 Dialog
   private void showReferenceInputDialog() {
-    String input = JOptionPane.showInputDialog(this, "추가할 레퍼런스를 입력하세요 (이름,링크):", "레퍼런스 추가", JOptionPane.PLAIN_MESSAGE);
-    if (input != null && input.contains(",")) {
-      JOptionPane.showMessageDialog(this, "레퍼런스가 추가되었습니다: " + input);
-    } else {
-      JOptionPane.showMessageDialog(this, "올바른 형식으로 입력해주세요. 예: 이름,링크", "입력 오류", JOptionPane.ERROR_MESSAGE);
+    JTextField reference_name = new JTextField();
+    JTextField reference_url = new JTextField();
+
+    Object[] inputFields = {
+        "이름:", reference_name,
+        "url:", reference_url,
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "레퍼런스 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = reference_name.getText().trim();
+      String url = reference_url.getText().trim();
+
+      if (name.isEmpty() || url.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListAdd.sendPostReference(name, url, selectGroupId);
+      }
     }
   }
 
