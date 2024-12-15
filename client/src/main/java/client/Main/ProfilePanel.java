@@ -194,9 +194,75 @@ public class ProfilePanel extends JPanel {
       if (!name.isEmpty() && !emoji.isEmpty() && !intro.isEmpty() && !affiliation.isEmpty()) {
         // 서버에 PATCH 요청 보내기
         FetchProfile.sendPatchRequest(name, emoji, intro, affiliation);
+        // 프로필 데이터 새로 불러오기 및 UI 업데이트
+        profileData = FetchProfile.fetchProfileData();
+        updateProfileUI();
       } else {
         JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요!", "입력 오류", JOptionPane.ERROR_MESSAGE);
       }
     }
+  }
+
+  // 프로필 UI 업데이트 메서드
+  private void updateProfileUI() {
+    removeAll(); // 기존 컴포넌트 제거
+    revalidate();
+    repaint();
+
+    // 새로운 데이터로 UI 재생성
+    setLayout(new BorderLayout(10, 10));
+    setBackground(Color.WHITE);
+    setBorder(new EmptyBorder(20, 20, 20, 20)); // 여백 설정
+
+    // 타이틀 "프로필"
+    JLabel titleLabel = new JLabel("프로필");
+    titleLabel.setFont(new Font("Paperlogy", Font.BOLD, 16));
+    add(titleLabel, BorderLayout.NORTH);
+
+    // 메인 패널
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+    mainPanel.setBackground(new Color(240, 240, 240));
+    mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+    // 스트릭 패널
+    JPanel streakTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    streakTitlePanel.setBackground(new Color(240, 240, 240));
+    streakTitlePanel.setBorder(new EmptyBorder(10, 0, 10, 0));
+    JLabel strick = new JLabel("스트릭");
+    strick.setFont(new Font("Paperlogy", Font.BOLD, 16));
+    streakTitlePanel.add(strick);
+    mainPanel.add(streakTitlePanel);
+
+    JPanel streakPanel = createStreakPanel();
+    mainPanel.add(streakPanel);
+
+    // 이름 패널
+    JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    namePanel.setBackground(new Color(240, 240, 240));
+
+    JLabel name = new JLabel(profileData.getProfile().getName() + " " + profileData.getProfile().getIcon());
+    name.setBorder(new EmptyBorder(10, 0, 10, 0));
+    name.setFont(new Font("Paperlogy", Font.BOLD, 16));
+    namePanel.add(name);
+
+    JButton editButton = new JButton("프로필 수정");
+    editButton.setFont(new Font("Paperlogy", Font.PLAIN, 12));
+    editButton.setBackground(Color.white);
+    editButton.addActionListener(e -> showProfileInputDialog(profileData.getProfile()));
+    namePanel.add(editButton);
+
+    mainPanel.add(namePanel);
+
+    // 유저 정보 패널
+    JPanel userInfoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    userInfoPanel.setPreferredSize(new Dimension(600, 150));
+    userInfoPanel.add(createUserInfoPanel());
+    mainPanel.add(userInfoPanel);
+
+    add(mainPanel, BorderLayout.CENTER);
+
+    revalidate(); // 레이아웃 다시 계산
+    repaint(); // UI 다시 그리기
   }
 }

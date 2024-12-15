@@ -190,7 +190,6 @@ public class StatisticsPanel extends JPanel {
         Border innerBorder = new EmptyBorder(0, 10, 0, 10);
         listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); // 외곽 테두리
 
-        // Mock 데이터 생성
         List<Map<String, Object>> Data = new ArrayList<>();
 
         for (DailyStatistics dailyStatics : statisticsData.getDailyStatics()) {

@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.SendPostGoal;
+import client.Main.fetchData.SendPostGoal2;
 import client.Main.fetchData.SendPostSchedule;
 import client.Main.fetchData.SendPutGoal;
 import client.Main.fetchData.FetchGoalData;
@@ -105,16 +106,38 @@ public class GoalPanel extends JPanel {
         // 체크리스트 패널 생성
         JPanel checklistPanel = new JPanel();
         checklistPanel.setBackground(new Color(240, 240, 240));
-        checklistPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
+        checklistPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
+        checklistPanel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
+        checklistPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 간격 추가
 
         for (Goal item : goals) {
             JCheckBox goal = new JCheckBox(" " + item.getText());
+            if (item.getStatus()) {
+                goal.setSelected(true);
+            }
             goal.setBackground(new Color(240, 240, 240));
             goal.setBorder(new EmptyBorder(5, 10, 0, 10));
             goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            goal.setSize(new Dimension(600, Integer.MAX_VALUE));
+
+            // 체크박스 상태 변경 이벤트 리스너
+            goal.addActionListener(e -> {
+                boolean isSelected = goal.isSelected();
+                Long goalId = item.getId();
+                System.out.println("Goal ID: " + goalId + ", New Status: " + isSelected);
+
+                // 서버에 PUT 요청 보내기
+                try {
+                    SendPostGoal2.sendPutGoal2(goalId, isSelected);
+                    JOptionPane.showMessageDialog(this, "목표 상태가 업데이트되었습니다!", "알림", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "목표 상태 업데이트 중 오류가 발생했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            });
             checklistPanel.add(goal);
-            System.out.println(item.getText());
+
         }
 
         // 버튼 클릭 이벤트
@@ -196,13 +219,15 @@ public class GoalPanel extends JPanel {
         checklistPanel.setBackground(new Color(240, 240, 240));
         checklistPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
+        checklistPanel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
+        checklistPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 간격 추가
 
         for (Plan item : homeData.getPlans()) {
-            JLabel goal = new JLabel(" " + item.getText());
-            goal.setBackground(new Color(240, 240, 240));
-            goal.setBorder(new EmptyBorder(5, 10, 0, 10));
-            goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-            checklistPanel.add(goal);
+            JLabel plan = new JLabel(" 📆 " + item.getText());
+            plan.setBackground(new Color(240, 240, 240));
+            plan.setBorder(new EmptyBorder(5, 10, 0, 10));
+            plan.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            checklistPanel.add(plan);
             System.out.println(item.getText());
         }
 
@@ -291,7 +316,7 @@ public class GoalPanel extends JPanel {
                     SendPostSchedule.sendPostSchedule(plan_text, goal_date);
 
                     // 새로운 체크박스 추가
-                    JCheckBox newCheckBox = createCheckBox(plan_text + " (" + goal_date + ")");
+                    JLabel newCheckBox = new JLabel(" 📆 " + plan_text + "  (" + goal_date + ")");
                     checklistPanel.add(newCheckBox);
                     checklistPanel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
                     checklistPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 간격 추가

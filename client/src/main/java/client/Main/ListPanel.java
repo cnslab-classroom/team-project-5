@@ -169,19 +169,26 @@ public class ListPanel extends JPanel {
     goalListPanel.setBackground(Color.WHITE);
     goalListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    for (StudyItem study : groupDetail.studies) {
-      JPanel goalPanelList = new JPanel(new BorderLayout());
-      goalPanelList.setBackground(Color.WHITE);
+    if (groupDetail.studies.isEmpty()) {
+      JLabel emptyLabel = new JLabel("목표가 없습니다.");
+      emptyLabel.setFont(new Font("paperlogy", Font.ITALIC, 14));
+      emptyLabel.setForeground(Color.GRAY);
+      goalListPanel.add(emptyLabel);
+    } else {
+      for (StudyItem study : groupDetail.studies) {
+        JPanel goalPanelList = new JPanel(new BorderLayout());
+        goalPanelList.setBackground(Color.WHITE);
 
-      JLabel dateLabel = new JLabel("📅 " + study.getDate() + "  ");
-      dateLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalPanelList.add(dateLabel, BorderLayout.WEST);
+        JLabel dateLabel = new JLabel("📅 " + study.getDate() + "  ");
+        dateLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        goalPanelList.add(dateLabel, BorderLayout.WEST);
 
-      JLabel textLabel = new JLabel(study.getText());
-      textLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalPanelList.add(textLabel, BorderLayout.CENTER);
+        JLabel textLabel = new JLabel(study.getText());
+        textLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        goalPanelList.add(textLabel, BorderLayout.CENTER);
 
-      goalListPanel.add(goalPanelList);
+        goalListPanel.add(goalPanelList);
+      }
     }
 
     goalPanel.add(goalListPanel, BorderLayout.CENTER);
@@ -217,7 +224,7 @@ public class ListPanel extends JPanel {
       JPanel memberPanelList = new JPanel(new BorderLayout());
       memberPanelList.setBackground(Color.WHITE);
 
-      JLabel emojiLabel = new JLabel(member.getEmoji() + " ");
+      JLabel emojiLabel = new JLabel(decodeUnicode(member.getEmoji()) + " ");
       emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
       memberPanelList.add(emojiLabel, BorderLayout.WEST);
 
@@ -257,28 +264,35 @@ public class ListPanel extends JPanel {
     referenceListPanel.setBorder(outerBorder);
     referenceListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    for (ReferenceLinkItem reference : groupDetail.referenceLinks) {
-      JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      referencePanelList.setBackground(Color.WHITE);
+    if (groupDetail.referenceLinks.isEmpty()) {
+      JLabel emptyLabel = new JLabel("레퍼런스가 없습니다.");
+      emptyLabel.setFont(new Font("paperlogy", Font.ITALIC, 14));
+      emptyLabel.setForeground(Color.GRAY);
+      referenceListPanel.add(emptyLabel);
+    } else {
+      for (ReferenceLinkItem reference : groupDetail.referenceLinks) {
+        JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        referencePanelList.setBackground(Color.WHITE);
 
-      String htmlLink = String.format("<html><div style='width:300px;'>🔗 <a href=''>%s</a></div></html>",
-          reference.getName());
+        String htmlLink = String.format("<html><div style='width:300px;'>🔗 <a href=''>%s</a></div></html>",
+            reference.getName());
 
-      JLabel linkLabel = new JLabel(htmlLink);
-      linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-      linkLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        JLabel linkLabel = new JLabel(htmlLink);
+        linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        linkLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
 
-      // 마우스 클릭 이벤트로 링크 열기
-      final String url = reference.getUrl();
-      linkLabel.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          openWebpage(url); // URL 열기
-        }
-      });
+        // 마우스 클릭 이벤트로 링크 열기
+        final String url = reference.getUrl();
+        linkLabel.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            openWebpage(url);
+          }
+        });
 
-      referencePanelList.add(linkLabel);
-      referenceListPanel.add(referencePanelList);
+        referencePanelList.add(linkLabel);
+        referenceListPanel.add(referencePanelList);
+      }
     }
 
     referencePanel.add(referenceListPanel, BorderLayout.CENTER);
@@ -302,6 +316,18 @@ public class ListPanel extends JPanel {
       e.printStackTrace();
       JOptionPane.showMessageDialog(this, "Failed to open the link: " + url);
     }
+  }
+
+  private static String decodeUnicode(String input) {
+    StringBuilder sb = new StringBuilder();
+    String[] parts = input.split("\\\\u"); // "\\u" 기준으로 나눔
+    sb.append(parts[0]); // 첫 부분 추가
+    for (int i = 1; i < parts.length; i++) {
+      String hex = parts[i].substring(0, 4); // 유니코드 4자리 추출
+      sb.append((char) Integer.parseInt(hex, 16)); // 유니코드를 문자로 변환
+      sb.append(parts[i].substring(4)); // 나머지 부분 추가
+    }
+    return sb.toString();
   }
 
   private void refreshData() {

@@ -99,14 +99,13 @@ public class FetchProfile {
   public static void sendPatchRequest(String name, String emoji, String intro, String affiliation) {
     try {
       // 서버 URL
-      URL url = new URL("http://localhost:8080/plan/1/profile");
+      URL url = new URL("http://localhost:8080/plan/1/edit_profile");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-      // POST 요청 설정 + PATCH 동작 설정
-      conn.setRequestMethod("POST");
+      // PUT 요청 설정
+      conn.setRequestMethod("PUT");
       conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
-      conn.setDoOutput(true);
+      conn.setDoOutput(true); // 출력 스트림 활성화
 
       // JSON 데이터 생성
       String jsonInputString = String.format(
