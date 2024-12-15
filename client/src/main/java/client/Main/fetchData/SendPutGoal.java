@@ -8,25 +8,29 @@ import java.net.URL;
 
 import javax.swing.JOptionPane;
 
-public class SendPostSignUp {
+public class SendPutGoal {
 
-    public static boolean sendPostSignUp(String name, String signId, String password, String nickname, String email) {
+    public static void sendPutGoal(Long goal_id) {
         try {
-            // 서버 URL
-            URL url = new URL("http://localhost:8080/auth/signUp");
+            // 서버 URL 설정
+            URL url = new URL("http://localhost:8080/plan/1/daily");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            // POST 요청 설정
-            conn.setRequestMethod("POST");
+            
+            // PUT 요청 설정
+            conn.setRequestMethod("PUT");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
+            
+            Boolean always_true = new Boolean(true);
 
             // JSON 데이터 생성
             String jsonInputString = String.format(
-                "{ \"name\": \"%s\", \"sign_id\": \"%s\", \"password\": \"%s\", \"nickname\": \"%s\", \"email\": \"%s\" }",
-                name, signId, password, nickname, email);
+                "{\"goal_id\": %d, \"plan_status\": %b}",
+                goal_id, always_true
+            );
 
-            System.out.println("서버 응답 코드: " + jsonInputString);
+            // 요청 데이터 로그
+            System.out.println("PUT JSON: " + jsonInputString);
 
             // 서버로 데이터 전송
             try (OutputStream os = conn.getOutputStream()) {
@@ -50,19 +54,14 @@ public class SendPostSignUp {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "회원가입 성공");
-                return true;
-            }
-            else {
-                // 오류 메시지 처리
-                JOptionPane.showMessageDialog(null, "회원가입 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
-                return false;
+                JOptionPane.showMessageDialog(null, "목표 체크 성공");
+            } else {
+                JOptionPane.showMessageDialog(null, "목표 체크 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
-            return false;
         }
     }
 }

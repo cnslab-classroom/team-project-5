@@ -10,7 +10,9 @@ import javax.swing.JOptionPane;
 
 public class SendPostGoal {
 
-    public static void sendPostGoal(String goalText, String goalStartDate, String goalEndDate) {
+    public static Long sendPostGoal(String goalText, String goalStartDate, String goalEndDate) {
+        Long goal_id = null;
+
         try {
             // 서버 URL 설정
             URL url = new URL("http://localhost:8080/plan/1/daily");
@@ -52,14 +54,31 @@ public class SendPostGoal {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "목표 추가 성공: " + response.toString());
+                JOptionPane.showMessageDialog(null, "목표 추가 성공");
             } else {
                 JOptionPane.showMessageDialog(null, "목표 추가 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }
 
+            goal_id = parseGoalId(response.toString());     
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "서버로 데이터를 전송하지 못했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return goal_id;
+    }
+
+    public static Long parseGoalId(String jsonResponse) {
+        try {
+            int startIndex = jsonResponse.indexOf("\"goal_id\":") + 10; // 시작 인덱스
+            int endIndex = jsonResponse.indexOf(",", startIndex); // 다음 쉼표 위치
+            if (endIndex == -1) endIndex = jsonResponse.indexOf("}", startIndex); // 중괄호 종료로 끝날 경우
+            String goalIdValue = jsonResponse.substring(startIndex, endIndex).trim();
+            return Long.parseLong(goalIdValue);
+        } catch (Exception e) {
+            System.out.println("JSON 파싱 중 오류 발생: " + e.getMessage());
+            return null;
         }
     }
 }
