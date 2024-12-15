@@ -93,6 +93,8 @@ public class GoalPanel extends JPanel {
         checklistPanel.setBackground(new Color(240, 240, 240));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
 
+        
+
         // 버튼 클릭 이벤트
         addButton.addActionListener(new ActionListener() {
             @Override
