@@ -43,7 +43,7 @@ public class ProfileController {
 
 
     //프로필 수정
-    @PatchMapping("/{memberId}/edit_profile")
+    @PutMapping ("/{memberId}/edit_profile")
     public ResponseEntity<Map<String, String>> updateProfile(
             @PathVariable Long memberId,
             @RequestBody ProfileUpdateRequestDto requestDto) {
@@ -54,19 +54,7 @@ public class ProfileController {
         // 응답 메시지 생성
         Map<String, String> response = new HashMap<>();
         response.put("status", "200");
-
-        if (requestDto.getName() != null) {
-            response.put("name", "이름이 성공적으로 수정되었습니다.");
-        }
-        if (requestDto.getIcon() != null) {
-            response.put("icon", "아이콘이 성공적으로 수정되었습니다.");
-        }
-        if (requestDto.getBio() != null) {
-            response.put("bio", "소개가 성공적으로 수정되었습니다.");
-        }
-        if (requestDto.getAffiliation() != null) {
-            response.put("affiliation", "소속이 성공적으로 수정되었습니다.");
-        }
+        response.put("message", "프로필이 성공적으로 수정되었습니다.");
 
         return ResponseEntity.ok(response);
     }

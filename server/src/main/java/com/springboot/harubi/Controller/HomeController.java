@@ -4,10 +4,7 @@ import com.springboot.harubi.Domain.Dto.response.HomeResponseDto;
 import com.springboot.harubi.Service.HomeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/plan")
@@ -16,14 +13,9 @@ public class HomeController {
 
     private final HomeService homeService;
 
-    /**
-     * Home 데이터를 반환하는 API
-     * @param memberId 회원 ID
-     * @return HomeResponseDto
-     */
-    @GetMapping("{memberId}")
-    public ResponseEntity<HomeResponseDto> getHomeData(@RequestParam Long memberId, @RequestParam Long studyGroupId) {
-        HomeResponseDto homeData = homeService.getHomeData(memberId, studyGroupId);
+    @GetMapping("/{member_id}")
+    public ResponseEntity<HomeResponseDto> getHomeData(@PathVariable("member_id") Long member_id) {
+        HomeResponseDto homeData = homeService.getHomeData(member_id);
         return ResponseEntity.ok(homeData);
     }
 }
