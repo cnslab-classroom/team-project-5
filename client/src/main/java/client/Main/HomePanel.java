@@ -18,6 +18,8 @@ import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.FetchHome;
 import client.Main.fetchData.FetchHome.HomeData;
+import client.Main.model.Goal;
+import client.Main.model.StudyItem;
 
 public class HomePanel extends JPanel {
     private HomeData homeData = FetchHome.fetchHomeData();
@@ -64,7 +66,7 @@ public class HomePanel extends JPanel {
         HomeQuote.setAlignmentX(CENTER_ALIGNMENT);
         HomeQuote.setHorizontalAlignment(JLabel.CENTER); // 수평 가운데 정렬
         HomeQuote.setVerticalAlignment(JLabel.CENTER); // 수직 가운데 정렬
-        HomeQuote.setMaximumSize(new Dimension(600, 100));
+        HomeQuote.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
         // 목표 섹션
         JPanel goalPanel = new JPanel();
@@ -94,21 +96,22 @@ public class HomePanel extends JPanel {
         goalBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         goalBox.setBackground(new Color(240, 240, 240));
         goalBox.setAlignmentX(CENTER_ALIGNMENT);
-        goalBox.setMaximumSize(new Dimension(600, 85));
+        // setMaximumSize 제거
+        goalBox.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
-        for (int i = 0; i < homeData.getGoals().size(); i++) {
-            JCheckBox goal = new JCheckBox(" " + homeData.getGoals().get(i).getText());
+        for (Goal item : homeData.getGoals()) {
+            JCheckBox goal = new JCheckBox(" " + item.getText());
             goal.setBackground(new Color(240, 240, 240));
             goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             goalBox.add(goal);
+            System.out.println(item.getText());
         }
 
-        goalPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        goalPanel.add(goalTitlePanel);
-        goalPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        goalPanel.add(goalBox);
-        goalPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        goalBox.revalidate();
+        goalBox.repaint();
 
+        goalPanel.add(goalTitlePanel);
+        goalPanel.add(goalBox);
         // 일정 섹션
         JPanel schedulePanel = new JPanel();
         schedulePanel.setLayout(new BoxLayout(schedulePanel, BoxLayout.Y_AXIS));
@@ -137,7 +140,7 @@ public class HomePanel extends JPanel {
         scheduleBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         scheduleBox.setBackground(new Color(240, 240, 240));
         scheduleBox.setAlignmentX(CENTER_ALIGNMENT);
-        scheduleBox.setMaximumSize(new Dimension(600, 75));
+        scheduleBox.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
         for (int i = 0; i < homeData.getPlans().size(); i++) {
             JLabel schedule = new JLabel(
@@ -179,11 +182,10 @@ public class HomePanel extends JPanel {
         studyBox.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         studyBox.setBackground(new Color(240, 240, 240));
         studyBox.setAlignmentX(CENTER_ALIGNMENT);
-        studyBox.setMaximumSize(new Dimension(600, 75));
+        studyBox.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
-        for (int i = 0; i < homeData.getStudies().size(); i++) {
-            JLabel study = new JLabel("📖 ~" +
-                    homeData.getStudies().get(i).getDate() + "  " + homeData.getStudies().get(i).getText());
+        for (StudyItem item : homeData.getStudies()) {
+            JLabel study = new JLabel("📖 ~" + item.getDate() + "  " + item.getText());
             study.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             studyBox.add(study);
         }
