@@ -9,4 +9,3 @@ public class StreakResponseDto {
     private int streakDays;
     private boolean todayGoalCompleted;
 }
-

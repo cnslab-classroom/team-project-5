@@ -14,11 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import client.Main.fetchData.SendPostTCA;
 import client.Frame;
+import client.Main.fetchData.SendPostTCA;
 
 public class TCAPanel extends JPanel {
-    public TCAPanel(Frame parentFrame) {
+    public TCAPanel(Frame parentFrame, String email) {
         setLayout(new BorderLayout());
         setBackground(new Color(240, 240, 240));
 
@@ -79,18 +79,17 @@ public class TCAPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (agreeCheckBox.isSelected()) {
-                    // 서버에 동의 데이터 전송
-                    boolean agreement = true; // 항상 true 값 전송
-                    SendPostTCA.sendPostTCA(agreement);
-
-                    // 동의 후 확인 메시지 표시
+                    // 확인 메시지 표시
                     int result = JOptionPane.showConfirmDialog(
                             parentFrame,
-                            "위 정보로 가입하시겠습니까?",
+                            "개인정보 처리 방침에 동의하시겠습니까?",
                             "확인",
                             JOptionPane.OK_CANCEL_OPTION
                     );
                     if (result == JOptionPane.OK_OPTION) {
+                        // 서버에 동의 데이터 전송
+                        boolean agreed = true; // 항상 true 값 전송
+                        SendPostTCA.sendPostTCA(email, agreed); // email과 agreed 전달
                         parentFrame.switchToPanel(new SuccessSignUpPanel(parentFrame));
                     }
                 }

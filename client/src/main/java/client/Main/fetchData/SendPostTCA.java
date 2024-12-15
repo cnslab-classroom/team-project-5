@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 public class SendPostTCA {
 
-    public static void sendPostTCA(boolean agreement) {
+    public static void sendPostTCA(String email, boolean agreed) {
         try {
             // 서버 URL
             URL url = new URL("http://localhost:8080/auth/agree");
@@ -22,7 +22,10 @@ public class SendPostTCA {
             conn.setDoOutput(true);
 
             // JSON 데이터 생성
-            String jsonInputString = String.format("{ \"agreement\": %b }", agreement);
+            String jsonInputString = String.format(
+                "{ \"email\": \"%s\", \"agreed\": %b }",
+                email, agreed
+            );
 
             // 요청 데이터 로그
             System.out.println("POST JSON: " + jsonInputString);
@@ -50,8 +53,6 @@ public class SendPostTCA {
             // 응답 처리
             if (responseCode == 200) {
                 JOptionPane.showMessageDialog(null, "동의 완료: " + response.toString());
-            } else if (responseCode == 400) {
-                JOptionPane.showMessageDialog(null, "동의 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(null, "예기치 않은 오류 발생: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }

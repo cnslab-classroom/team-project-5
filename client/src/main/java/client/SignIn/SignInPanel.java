@@ -10,16 +10,20 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import client.Frame;
 import client.Main.ClientMain;
+import client.Main.fetchData.SendPostSignIn;
 import client.RoundedButton;
 
 public class SignInPanel extends JPanel {
+    private JTextField idField;
+    private JTextField passwordField;
+
     public SignInPanel(Frame parentFrame) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // 수직 정렬
         setBackground(new Color(240, 240, 240)); // 배경색 설정
@@ -32,17 +36,11 @@ public class SignInPanel extends JPanel {
 
         // 아이디 필드
         JPanel idPanel = createInputField("아이디🔑", true);
-        idPanel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
-        idPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        idPanel.setBackground(new Color(240, 240, 240));
-        idPanel.setOpaque(false);
+        idField = (JTextField) idPanel.getComponent(2); // 입력 필드 가져오기
 
         // 비밀번호 필드
         JPanel passwordPanel = createInputField("비밀번호🔒", true);
-        passwordPanel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
-        passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        passwordPanel.setBackground(new Color(240, 240, 240));
-        passwordPanel.setOpaque(false);
+        passwordField = (JTextField) passwordPanel.getComponent(2); // 입력 필드 가져오기
 
         // 다음 버튼
         RoundedButton nextButton = new RoundedButton("다음", new Color(0, 153, 0));
@@ -51,37 +49,36 @@ public class SignInPanel extends JPanel {
         nextButton.setForeground(Color.WHITE); // 버튼 텍스트 색상
         nextButton.setMaximumSize(new Dimension(150, 40)); // 버튼 크기 제한
         nextButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
-        // 별표 레이블 (빨간색)
-        JLabel asteriskLabel = new JLabel("*");
-        asteriskLabel.setFont(new Font("Paperlogy", Font.PLAIN, 14));
-        asteriskLabel.setForeground(Color.RED);
-        asteriskLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // 컴포넌트 간 간격 추가
         add(Box.createRigidArea(new Dimension(0, 30))); // 상단 여백
         add(welcomeLabel); // 상단 텍스트 추가
         add(Box.createRigidArea(new Dimension(0, 20))); // 간격
-
         add(idPanel); // 아이디 패널 추가
         add(Box.createRigidArea(new Dimension(0, 15))); // 간격
         add(passwordPanel); // 비밀번호 패널 추가
         add(Box.createRigidArea(new Dimension(0, 30))); // 간격
         add(nextButton); // 다음 버튼 추가
 
-        // 버튼 클릭 이벤트: 새로운 프레임(ClientMain) 열기
+        // 버튼 클릭 이벤트: 로그인 로직 추가
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 현재 프레임 닫기
-                parentFrame.dispose();
+                String signId = idField.getText().trim();
+                String password = passwordField.getText().trim();
 
-                // 새로운 프레임 열기
-                JFrame newFrame = new JFrame("Main Window");
-                newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                newFrame.setSize(900, 800);
-                newFrame.add(new ClientMain()); // ClientMain 추가
-                newFrame.setVisible(true);
+                if (signId.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(parentFrame, "아이디와 비밀번호를 모두 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // 서버에 로그인 요청 전송
+                Integer memberId = SendPostSignIn.sendPostSignIn(signId, password);
+
+                if (memberId != null) {
+                    // 로그인 성공: 메인 화면(ClientMain)으로 이동
+                    parentFrame.switchToPanel(new ClientMain());
+                }
             }
         });
     }
