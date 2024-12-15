@@ -60,12 +60,11 @@ public class FetchProfile {
       // profile 데이터 파싱
       String profileSection = json.split("\"profile\":\\{")[1].split("\\}")[0];
       String name = extractValue(profileSection, "name");
-      int status = Integer.parseInt(extractValue(profileSection, "status"));
       String icon = decodeUnicode(extractValue(profileSection, "icon")); // 유니코드 디코딩 적용
       String bio = extractValue(profileSection, "bio");
       String affiliation = extractValue(profileSection, "affiliation");
 
-      Profile profile = new Profile(name, status, icon, bio, affiliation);
+      Profile profile = new Profile(name, icon, bio, affiliation);
       profileData.setProfile(profile);
 
     } catch (Exception e) {
