@@ -11,5 +11,5 @@ import java.util.Date;
 @NoArgsConstructor
 public class PlanCheckRequestDto {
     private Long goal_id;
-    private boolean plan_status;
+    private Boolean plan_status;
 }
