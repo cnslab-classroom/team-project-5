@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -22,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.FetchStatistics;
+import client.Main.model.DailyStatistics;
 import client.Main.model.Statistics;
 
 public class StatisticsPanel extends JPanel {
@@ -105,51 +105,66 @@ public class StatisticsPanel extends JPanel {
         String[] days = { "M", "T", "W", "T", "F", "S", "S" };
 
         // 날짜별 데이터를 Map으로 변환 (날짜 -> 달성도)
-        Map<String, Integer> achievementMap = new HashMap<>();
+        Map<String, Double> achievementMap = new HashMap<>();
         for (Statistics stat : statisticsData.getStatics()) {
             achievementMap.put(stat.getDate(), stat.getAchievement());
         }
 
-        // 서버에서 받은 날짜 리스트 (yyyy-MM-dd)
+        // 서버에서 받은 날짜 리스트를 7x53 형태로 나누기
         List<String> dateList = new ArrayList<>(achievementMap.keySet());
+        List<List<String>> weeklyGrid = new ArrayList<>();
 
-        // 셀을 채우기 위한 날짜 인덱스
-        int dateIndex = 0;
-
-        // 그리드 생성
-        for (int row = 0; row < 7; row++) {
-            // 1. 각 행의 첫 번째 셀에 요일 추가
-            JLabel dayLabel = new JLabel(days[row], SwingConstants.CENTER);
-            dayLabel.setFont(new Font("paperlogy", Font.BOLD, 14));
-            dayLabel.setForeground(row >= 5 ? (row == 5 ? Color.BLUE : Color.RED) : Color.BLACK);
-            graphPanel.add(dayLabel);
-
-            // 나머지 53개의 셀 추가 (1년 53주)
-            for (int col = 0; col < 53; col++) {
-                JPanel cell = new JPanel() {
-                    @Override
-                    public Dimension getPreferredSize() {
-                        return new Dimension(2, 2); // 셀 크기 고정
-                    }
-                };
-                // 날짜에 맞춰 색상 설정
-                if (dateIndex < dateList.size()) {
-                    String currentDate = dateList.get(dateIndex);
-                    int value = achievementMap.getOrDefault(currentDate, 0);
-                    cell.setBackground(getColorForValue(value));
-                    dateIndex++; // 다음 날짜로 이동
+        // 7x53으로 쪼개기
+        int totalCols = 53;
+        for (int i = 0; i < 7; i++) {
+            List<String> weekRow = new ArrayList<>();
+            for (int j = 0; j < totalCols; j++) {
+                int index = j * 7 + i; // 순서대로 요일에 맞게 인덱스 계산
+                if (index < dateList.size()) {
+                    weekRow.add(dateList.get(index));
                 } else {
-                    cell.setBackground(new Color(220, 220, 220)); // 데이터가 없는 경우 회색
+                    weekRow.add(null); // 빈 값
                 }
+            }
+            weeklyGrid.add(weekRow);
+        }
 
-                graphPanel.add(cell);
+        // 그리드 채우기
+        for (int row = 0; row < 7; row++) { // 행 단위 (요일)
+            for (int col = 0; col < 54; col++) { // 열 단위 (주)
+                if (col == 0) {
+                    // 첫 번째 열에 요일 레이블 추가
+                    JLabel dayLabel = new JLabel(days[row], SwingConstants.CENTER);
+                    dayLabel.setFont(new Font("paperlogy", Font.BOLD, 14));
+                    dayLabel.setForeground(row >= 5 ? (row == 5 ? Color.BLUE : Color.RED) : Color.BLACK);
+                    graphPanel.add(dayLabel);
+                } else {
+                    // 날짜에 맞춰 색상 설정
+                    JPanel cell = new JPanel() {
+                        @Override
+                        public Dimension getPreferredSize() {
+                            return new Dimension(10, 10); // 셀 크기
+                        }
+                    };
+
+                    String date = weeklyGrid.get(row).get(col - 1);
+                    if (date != null) {
+                        double value = achievementMap.getOrDefault(date, 0.0);
+                        cell.setBackground(getColorForValue(value));
+                    } else {
+                        cell.setBackground(new Color(220, 220, 220)); // 데이터가 없는 경우 회색
+                    }
+
+                    graphPanel.add(cell);
+                }
             }
         }
 
         return graphPanel;
     }
 
-    private Color getColorForValue(int value) {
+    // 달성도에 따라 색상 반환
+    private Color getColorForValue(double value) {
         int greenIntensity = Math.min((int) (255 * ((100.0 - value) / 100.0)), 255);
         return new Color(0, greenIntensity, 0); // 초록색 톤
     }
@@ -176,58 +191,45 @@ public class StatisticsPanel extends JPanel {
         listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); // 외곽 테두리
 
         // Mock 데이터 생성
-        List<Map<String, Object>> mockData = new ArrayList<>();
+        List<Map<String, Object>> Data = new ArrayList<>();
 
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("goal_text", "1일 1백준wnswns");
-        item1.put("goal_date_achievement", 55);
-        item1.put("goal_whole_date", 94);
-        item1.put("goal_percent", 58.5);
-        mockData.add(item1);
+        for (DailyStatistics dailyStatics : statisticsData.getDailyStatics()) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("goal_text", dailyStatics.getGoalText());
+            item.put("goal_date_achievement", dailyStatics.getGoalDateAchievement());
+            item.put("goal_whole_date", dailyStatics.getGoalWholeDate());
+            item.put("goal_percent", dailyStatics.getGoalPercent());
+            Data.add(item);
+        }
 
-        Map<String, Object> item2 = new HashMap<>();
-        item2.put("goal_text", "신나는 방 청소");
-        item2.put("goal_date_achievement", 11);
-        item2.put("goal_whole_date", 13);
-        item2.put("goal_percent", 84.6);
-        mockData.add(item2);
-
-        Map<String, Object> item3 = new HashMap<>();
-        item3.put("goal_text", "기초영작문 노트정리");
-        item3.put("goal_date_achievement", 18);
-        item3.put("goal_whole_date", 52);
-        item3.put("goal_percent", 34.6);
-        mockData.add(item3);
-
-        // 데이터 기반으로 리스트 구성
-        for (Map<String, Object> item : mockData) {
+        for (Map<String, Object> item : Data) {
             JPanel taskPanel = new JPanel(new BorderLayout());
             taskPanel.setBackground(new Color(240, 240, 240));
 
             String goalText = (String) item.get("goal_text");
-            int achieved = (int) item.get("goal_date_achievement");
-            int total = (int) item.get("goal_whole_date");
-            double percent = (double) item.get("goal_percent");
+
+            // 값 변환: Double -> Integer
+            int achieved = ((Number) item.get("goal_date_achievement")).intValue();
+            int total = ((Number) item.get("goal_whole_date")).intValue();
+            double percent = ((Number) item.get("goal_percent")).doubleValue();
 
             JLabel checkBox = new JLabel(goalText);
             checkBox.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             taskPanel.add(checkBox, BorderLayout.WEST);
 
             // 목표 진행률 텍스트 생성
-            int greenIntensity = Math.min((int) (255 * ((100 - percent) / 100.0)), 255); // percent 값에 따른 색상
+            int greenIntensity = Math.min((int) (255 * ((100 - percent) / 100.0)), 255);
             String progressText = String.format("(%d/%d) <span style='color: rgb(0,%d,0);'>%.1f%%</span>",
                     achieved,
                     total,
-                    greenIntensity, // 동적으로 계산한 초록색 강도
+                    greenIntensity,
                     percent);
 
             // HTML을 사용해 JLabel 생성
             JLabel progressLabel = new JLabel("<html>" + progressText + "</html>", SwingConstants.RIGHT);
             progressLabel.setFont(new Font("Paperlogy", Font.PLAIN, 15));
 
-            // 패널에 레이블 추가
             taskPanel.add(progressLabel, BorderLayout.CENTER);
-
             listPanel.add(taskPanel);
         }
 

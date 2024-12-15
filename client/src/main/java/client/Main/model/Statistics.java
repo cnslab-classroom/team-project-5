@@ -2,9 +2,9 @@ package client.Main.model;
 
 public class Statistics {
   private String date;
-  private int achievement;
+  private double achievement;
 
-  public Statistics(String date, int achievement) {
+  public Statistics(String date, double achievement) {
     this.date = date;
     this.achievement = achievement;
   }
@@ -17,11 +17,11 @@ public class Statistics {
     this.date = date;
   }
 
-  public int getAchievement() {
+  public double getAchievement() {
     return achievement;
   }
 
-  public void setAchievement(int achievement) {
+  public void setAchievement(double achievement) {
     this.achievement = achievement;
   }
 }

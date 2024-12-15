@@ -2,11 +2,11 @@ package client.Main.model;
 
 public class DailyStatistics {
   private String goalText;
-  private int goalDateAchievement;
+  private double goalDateAchievement;
   private int goalWholeDate;
   private double goalPercent;
 
-  public DailyStatistics(String goalText, int goalDateAchievement, int goalWholeDate, double goalPercent) {
+  public DailyStatistics(String goalText, double goalDateAchievement, int goalWholeDate, double goalPercent) {
     this.goalText = goalText;
     this.goalDateAchievement = goalDateAchievement;
     this.goalWholeDate = goalWholeDate;
@@ -21,11 +21,11 @@ public class DailyStatistics {
     this.goalText = goalText;
   }
 
-  public int getGoalDateAchievement() {
+  public double getGoalDateAchievement() {
     return goalDateAchievement;
   }
 
-  public void setGoalDateAchievement(int goalDateAchievement) {
+  public void setGoalDateAchievement(double goalDateAchievement) {
     this.goalDateAchievement = goalDateAchievement;
   }
 
