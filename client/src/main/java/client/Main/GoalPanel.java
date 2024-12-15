@@ -18,8 +18,10 @@ import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.SendPostGoal;
 import client.Main.fetchData.SendPostSchedule;
+import client.Main.fetchData.SendPutGoal;
 
 public class GoalPanel extends JPanel {
+
     public GoalPanel() {
         // 패널 설정
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -211,10 +213,18 @@ public class GoalPanel extends JPanel {
             if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
                 try {
                     // 서버로 목표 데이터 전송
-                    SendPostGoal.sendPostGoal(goalText, startDate, endDate);
+                    Long goal_id = SendPostGoal.sendPostGoal(goalText, startDate, endDate);
 
                     // 새로운 체크박스 추가
                     JCheckBox newCheckBox = createCheckBox(goalText);
+                    newCheckBox.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            // 체크박스 클릭 시 서버로 목표 체크 데이터 전송
+                            SendPutGoal.sendPutGoal(goal_id);
+                        }
+                    });
+
                     checklistPanel.add(newCheckBox);
                     checklistPanel.setAlignmentX(CENTER_ALIGNMENT); // 가운데 정렬
                     checklistPanel.add(Box.createRigidArea(new Dimension(0, 5))); // 간격 추가
