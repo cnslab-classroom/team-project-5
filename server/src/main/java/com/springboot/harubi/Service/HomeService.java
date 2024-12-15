@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Service
 public class HomeService {
@@ -32,7 +34,7 @@ public class HomeService {
         this.sayingRepository = sayingRepository;
     }
 
-    public HomeResponseDto getHomeData(Long memberId, Long studyGroupId) {
+    public HomeResponseDto getHomeData(Long memberId) {
         // 현재 날짜 가져오기
         Date today = new Date();
 
@@ -62,10 +64,14 @@ public class HomeService {
                 .collect(Collectors.toList());
 
         // Studies 조회 및 변환 (현재 날짜 범위 내, 종료일 기준 정렬, 최대 3개)
-        List<StudyResponseDto> studies = studyRepository.findByStudyGroupAndDateRange(studyGroupId, today, PageRequest.of(0, 3))
+        List<StudyGroup> studyGroups = member.getMemberGroups().stream()
+                .map(MemberGroup::getStudyGroup)
+                .collect(Collectors.toList());
+
+        List<StudyResponseDto> studies = studyRepository.findStudiesByStudyGroupsAndDate
+                        (studyGroups, today, PageRequest.of(0, 3))
                 .stream()
                 .sorted(Comparator.comparing(Study::getStudy_end_date)) // 종료일 기준 정렬
-                .limit(3) // 최대 3개 선택
                 .map(StudyResponseDto::fromEntity) // Study -> StudyResponseDto 변환
                 .collect(Collectors.toList());
 
@@ -83,8 +89,22 @@ public class HomeService {
                 sayingDto
         );
     }
+
     private boolean isSameDay(Date date1, Date date2) {
-        return date1.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-                .equals(date2.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate());
+        LocalDate localDate1 = convertToLocalDate(date1);
+        LocalDate localDate2 = convertToLocalDate(date2);
+        return localDate1.equals(localDate2);
+    }
+
+    private LocalDate convertToLocalDate(Date date) {
+        if (date instanceof java.sql.Date) {
+            return ((java.sql.Date) date).toLocalDate();
+        } else {
+            return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+    }
+
+    private Date convertToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }

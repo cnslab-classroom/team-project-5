@@ -1,6 +1,7 @@
 package com.springboot.harubi.Repository;
 
 import com.springboot.harubi.Domain.Entity.Study;
+import com.springboot.harubi.Domain.Entity.StudyGroup;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,11 @@ public interface StudyRepository extends JpaRepository<Study, Long> {
             @Param("today") Date today,
             Pageable pageable
     );
+
+    @Query("SELECT s FROM Study s " +
+            "WHERE s.studyGroup IN :studyGroups " +
+            "AND :today BETWEEN s.study_start_date AND s.study_end_date")
+    List<Study> findStudiesByStudyGroupsAndDate(@Param("studyGroups") List<StudyGroup> studyGroups,
+                                                @Param("today") Date today,
+                                                Pageable pageable);
 }
