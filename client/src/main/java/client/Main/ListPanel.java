@@ -20,13 +20,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import client.Main.fetchData.FetchStudyList;
+import client.Main.fetchData.FetchStudyListAdd;
+import client.Main.model.GroupDetail;
+import client.Main.model.ListItem;
+import client.Main.model.MemberItem;
+import client.Main.model.ReferenceLinkItem;
 import client.Main.model.StudyItem;
 
 public class ListPanel extends JPanel {
   private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
   private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
 
-  private List<StudyItem> studyItems = new ArrayList<>();
+  private List<ListItem> studyItems = new ArrayList<>();
+  private int selectGroupId = 1;
+  GroupDetail groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
 
   public ListPanel() {
     setLayout(new BorderLayout(10, 10)); // 패널 간 간격
@@ -48,7 +55,7 @@ public class ListPanel extends JPanel {
 
   private void fetchDataFromServer() {
     // fetchStudyList 클래스에서 데이터 가져오기
-    studyItems = FetchStudyList.fetchData();
+    studyItems = FetchStudyList.fetchStudyListData();
   }
 
   private JPanel studyListPanel() {
@@ -71,7 +78,7 @@ public class ListPanel extends JPanel {
     titlePanel.add(createButton, BorderLayout.EAST);
 
     // 스터디 추가 Dialog
-    createButton.addActionListener(e -> showInputDialog("스터디 추가", "추가할 스터디를 입력하세요:"));
+    createButton.addActionListener(e -> showStudyInputDialog());
 
     studyListPanel.add(titlePanel, BorderLayout.NORTH);
 
@@ -81,7 +88,7 @@ public class ListPanel extends JPanel {
     listPanel.setBorder(BorderFactory.createCompoundBorder(outerBorder, new EmptyBorder(10, 10, 0, 10)));
 
     // 서버에서 가져온 데이터를 기반으로 UI 생성
-    for (StudyItem item : studyItems) {
+    for (ListItem item : studyItems) {
       JPanel studyPanel = new JPanel(new BorderLayout());
       studyPanel.setBackground(new Color(240, 240, 240));
       studyPanel.setBorder(new EmptyBorder(0, 0, 10, 0)); // 내부 여백
@@ -109,15 +116,22 @@ public class ListPanel extends JPanel {
 
     // 콤보박스
     String[] names = new String[studyItems.size()];
-    for (StudyItem item : studyItems) {
+    for (ListItem item : studyItems) {
       names[studyItems.indexOf(item)] = item.getName();
     }
     JComboBox<String> comboBox = new JComboBox<>(names);
-    comboBox.setFont(new Font("Arial", Font.PLAIN, 20));
+    comboBox.setFont(new Font("paperlogy", Font.PLAIN, 20));
 
     // 콤보박스 선택 이벤트
     comboBox.addActionListener(e -> {
       String selectedName = (String) comboBox.getSelectedItem();
+      for (ListItem item : studyItems) {
+        if (item.getName().equals(selectedName)) {
+          selectGroupId = studyItems.indexOf(item) + 1;
+          System.out.println("Selected Group ID: " + selectGroupId);
+        }
+      }
+      groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
     });
 
     // 상단 패널을 메인 패널에 추가
@@ -153,27 +167,28 @@ public class ListPanel extends JPanel {
     JPanel goalListPanel = new JPanel();
     goalListPanel.setLayout(new BoxLayout(goalListPanel, BoxLayout.Y_AXIS));
     goalListPanel.setBackground(Color.WHITE);
-    goalListPanel.setBorder(outerBorder);
-    goalListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    goalListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] goalNames = { "1일 1백준", "신나는 방 청소", "기초영작문 노트정리" };
-    String[] goalPeriod = { "2024.10.08", "2024.10.14", "2024.10.21" };
+    if (groupDetail.studies.isEmpty()) {
+      JLabel emptyLabel = new JLabel("목표가 없습니다.");
+      emptyLabel.setFont(new Font("paperlogy", Font.ITALIC, 14));
+      emptyLabel.setForeground(Color.GRAY);
+      goalListPanel.add(emptyLabel);
+    } else {
+      for (StudyItem study : groupDetail.studies) {
+        JPanel goalPanelList = new JPanel(new BorderLayout());
+        goalPanelList.setBackground(Color.WHITE);
 
-    for (int i = 0; i < goalNames.length; i++) {
-      JPanel goalPanelList = new JPanel(new BorderLayout());
-      goalPanelList.setBackground(Color.WHITE);
+        JLabel dateLabel = new JLabel("📅 " + study.getDate() + "  ");
+        dateLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        goalPanelList.add(dateLabel, BorderLayout.WEST);
 
-      JLabel goalPeriodLabel = new JLabel("✏️ " + goalPeriod[i] + " ");
-      goalPeriodLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalPeriodLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      goalPanelList.add(goalPeriodLabel, BorderLayout.WEST);
+        JLabel textLabel = new JLabel(study.getText());
+        textLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        goalPanelList.add(textLabel, BorderLayout.CENTER);
 
-      JLabel goalName = new JLabel(goalNames[i]);
-      goalName.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      goalName.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      goalPanelList.add(goalName, BorderLayout.CENTER);
-
-      goalListPanel.add(goalPanelList);
+        goalListPanel.add(goalPanelList);
+      }
     }
 
     goalPanel.add(goalListPanel, BorderLayout.CENTER);
@@ -203,24 +218,19 @@ public class ListPanel extends JPanel {
     memberListPanel.setLayout(new BoxLayout(memberListPanel, BoxLayout.Y_AXIS));
     memberListPanel.setBackground(Color.WHITE);
     memberListPanel.setBorder(outerBorder);
-    memberListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    memberListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] memberEmoge = { "😀", "😄", "😆", "🥰" };
-    String[] memberNames = { "김수오", "오은진", "최세연", "김단하" };
-
-    for (int i = 0; i < memberNames.length; i++) {
+    for (MemberItem member : groupDetail.members) {
       JPanel memberPanelList = new JPanel(new BorderLayout());
       memberPanelList.setBackground(Color.WHITE);
 
-      JLabel memberEmogeLabel = new JLabel(memberEmoge[i] + " ");
-      memberEmogeLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      memberEmogeLabel.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      memberPanelList.add(memberEmogeLabel, BorderLayout.WEST);
+      JLabel emojiLabel = new JLabel(decodeUnicode(member.getEmoji()) + " ");
+      emojiLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      memberPanelList.add(emojiLabel, BorderLayout.WEST);
 
-      JLabel memberName = new JLabel(memberNames[i]);
-      memberName.setFont(new Font("paperlogy", Font.PLAIN, 16));
-      memberName.setHorizontalAlignment(SwingConstants.LEFT); // 왼쪽 정렬
-      memberPanelList.add(memberName, BorderLayout.CENTER);
+      JLabel nameLabel = new JLabel(member.getName());
+      nameLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+      memberPanelList.add(nameLabel, BorderLayout.CENTER);
 
       memberListPanel.add(memberPanelList);
     }
@@ -252,34 +262,37 @@ public class ListPanel extends JPanel {
     referenceListPanel.setLayout(new BoxLayout(referenceListPanel, BoxLayout.Y_AXIS));
     referenceListPanel.setBackground(Color.WHITE);
     referenceListPanel.setBorder(outerBorder);
-    referenceListPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // 내부 여백
+    referenceListPanel.setBorder(new EmptyBorder(5, 10, 5, 10));
 
-    String[] linkNames = { "Notiondsffsfsdsf", "github", "github", "github", "github" };
-    String[] linkUrl = { "https://www.notion.com/ko", "https://github.com/cnslab-classroom/team-project-5",
-        "https://github.com/cnslab-classroom/team-project-5", "https://github.com/cnslab-classroom/team-project-5",
-        "https://github.com/cnslab-classroom/team-project-5" };
+    if (groupDetail.referenceLinks.isEmpty()) {
+      JLabel emptyLabel = new JLabel("레퍼런스가 없습니다.");
+      emptyLabel.setFont(new Font("paperlogy", Font.ITALIC, 14));
+      emptyLabel.setForeground(Color.GRAY);
+      referenceListPanel.add(emptyLabel);
+    } else {
+      for (ReferenceLinkItem reference : groupDetail.referenceLinks) {
+        JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        referencePanelList.setBackground(Color.WHITE);
 
-    for (int i = 0; i < linkNames.length; i++) {
-      JPanel referencePanelList = new JPanel(new FlowLayout(FlowLayout.LEFT)); // FlowLayout 사용
-      referencePanelList.setBackground(Color.WHITE);
+        String htmlLink = String.format("<html><div style='width:300px;'>🔗 <a href=''>%s</a></div></html>",
+            reference.getName());
 
-      String htmlLink = String.format("<html><div style='width:300px;'>🔗 <a href=''>%s</a></div></html>",
-          linkNames[i]);
-      JLabel linkLabel = new JLabel(htmlLink);
-      linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-      linkLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
+        JLabel linkLabel = new JLabel(htmlLink);
+        linkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        linkLabel.setFont(new Font("paperlogy", Font.PLAIN, 16));
 
-      // 마우스 클릭 이벤트로 링크 열기
-      final String url = linkUrl[i];
-      linkLabel.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          openWebpage(url); // URL 열기
-        }
-      });
+        // 마우스 클릭 이벤트로 링크 열기
+        final String url = reference.getUrl();
+        linkLabel.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            openWebpage(url);
+          }
+        });
 
-      referencePanelList.add(linkLabel);
-      referenceListPanel.add(referencePanelList);
+        referencePanelList.add(linkLabel);
+        referenceListPanel.add(referencePanelList);
+      }
     }
 
     referencePanel.add(referenceListPanel, BorderLayout.CENTER);
@@ -305,37 +318,141 @@ public class ListPanel extends JPanel {
     }
   }
 
+  private static String decodeUnicode(String input) {
+    StringBuilder sb = new StringBuilder();
+    String[] parts = input.split("\\\\u"); // "\\u" 기준으로 나눔
+    sb.append(parts[0]); // 첫 부분 추가
+    for (int i = 1; i < parts.length; i++) {
+      String hex = parts[i].substring(0, 4); // 유니코드 4자리 추출
+      sb.append((char) Integer.parseInt(hex, 16)); // 유니코드를 문자로 변환
+      sb.append(parts[i].substring(4)); // 나머지 부분 추가
+    }
+    return sb.toString();
+  }
+
+  private void refreshData() {
+    // 서버에서 최신 데이터 가져오기
+    studyItems = FetchStudyList.fetchStudyListData();
+    groupDetail = FetchStudyList.fetchGroupDetail(selectGroupId);
+
+    // 화면 갱신
+    removeAll();
+    JPanel topPanel = studyListPanel();
+    JPanel middlePanel = studyPanel();
+
+    add(topPanel, BorderLayout.NORTH);
+    add(middlePanel, BorderLayout.CENTER);
+
+    revalidate();
+    repaint();
+  }
+
+  // 스터디 그룹 추가 Dialog
+  private void showStudyInputDialog() {
+    JTextField study_group_name = new JTextField();
+    JTextField study_emoji = new JTextField();
+
+    Object[] inputFields = {
+        "이름:", study_group_name,
+        "이모지:", study_emoji,
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "스터디 그룹 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = study_group_name.getText().trim();
+      String emoji = study_emoji.getText().trim();
+
+      if (name.isEmpty() || emoji.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListAdd.sendPostList(name, emoji);
+        refreshData();
+      }
+    }
+  }
+
   // 목표 추가 Dialog
   private void showGoalInputDialog() {
-    String input = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
-    if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, "목표가 추가되었습니다: " + input);
+    JTextField nameField = new JTextField();
+    JTextField endDateField = new JTextField();
+    JTextField emojiField = new JTextField();
+
+    Object[] inputFields = {
+        "이름:", nameField,
+        "종료일 (yyyy-MM-dd):", endDateField,
+        "이모지:", emojiField
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "목표 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = nameField.getText().trim();
+      String endDate = endDateField.getText().trim();
+      String emoji = emojiField.getText().trim();
+
+      if (name.isEmpty() || endDate.isEmpty() || emoji.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListAdd.sendPostGoal(name, endDate, emoji, selectGroupId);
+        refreshData();
+      }
     }
   }
 
   // 멤버 추가 Dialog
   private void showMemberInputDialog() {
     String input = JOptionPane.showInputDialog(this, "추가할 멤버를 입력하세요:", "멤버 추가", JOptionPane.PLAIN_MESSAGE);
+
     if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, "멤버가 추가되었습니다: " + input);
+      // 서버로 POST 요청 전송
+      FetchStudyListAdd.sendPostMember(input, selectGroupId);
+      refreshData();
+    } else {
+      JOptionPane.showMessageDialog(this, "입력된 값이 없습니다. 다시 입력해 주세요.", "오류", JOptionPane.ERROR_MESSAGE);
     }
   }
 
   // 레퍼런스 추가 Dialog
   private void showReferenceInputDialog() {
-    String input = JOptionPane.showInputDialog(this, "추가할 레퍼런스를 입력하세요 (이름,링크):", "레퍼런스 추가", JOptionPane.PLAIN_MESSAGE);
-    if (input != null && input.contains(",")) {
-      JOptionPane.showMessageDialog(this, "레퍼런스가 추가되었습니다: " + input);
-    } else {
-      JOptionPane.showMessageDialog(this, "올바른 형식으로 입력해주세요. 예: 이름,링크", "입력 오류", JOptionPane.ERROR_MESSAGE);
-    }
-  }
+    JTextField reference_name = new JTextField();
+    JTextField reference_url = new JTextField();
 
-  // 공통 Dialog
-  private void showInputDialog(String title, String message) {
-    String input = JOptionPane.showInputDialog(this, message, title, JOptionPane.PLAIN_MESSAGE);
-    if (input != null && !input.trim().isEmpty()) {
-      JOptionPane.showMessageDialog(this, title + ": " + input);
+    Object[] inputFields = {
+        "이름:", reference_name,
+        "url:", reference_url,
+    };
+
+    int option = JOptionPane.showConfirmDialog(
+        this,
+        inputFields,
+        "레퍼런스 추가",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE);
+
+    if (option == JOptionPane.OK_OPTION) {
+      String name = reference_name.getText().trim();
+      String url = reference_url.getText().trim();
+
+      if (name.isEmpty() || url.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "모든 필드를 입력해주세요.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+      } else {
+        // FetchStudyListGoal 클래스를 사용하여 서버로 POST 요청 전송
+        FetchStudyListAdd.sendPostReference(name, url, selectGroupId);
+        refreshData();
+      }
     }
   }
 

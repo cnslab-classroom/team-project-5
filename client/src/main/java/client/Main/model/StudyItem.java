@@ -1,19 +1,19 @@
 package client.Main.model;
 
 public class StudyItem {
-  private String emoji;
-  private String name;
+  private String date;
+  private String text;
 
-  public StudyItem(String emoji, String name) {
-    this.emoji = emoji;
-    this.name = name;
+  public StudyItem(String date, String text) {
+    this.date = date;
+    this.text = text;
   }
 
-  public String getEmoji() {
-    return emoji;
+  public String getDate() {
+    return date;
   }
 
-  public String getName() {
-    return name;
+  public String getText() {
+    return text;
   }
 }
