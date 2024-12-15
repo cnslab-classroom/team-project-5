@@ -15,7 +15,7 @@ public class Streak {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long streakId;
+    private Long streak_id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -24,7 +24,9 @@ public class Streak {
     @Column(nullable = false)
     private int days = 0;
 
-    public Streak(Long memberId, int i) {
+    public Streak(Member member, int days) {
+        this.member = member;
+        this.days = days;
     }
 
     public void incrementDays() {

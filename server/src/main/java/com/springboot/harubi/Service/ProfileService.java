@@ -36,9 +36,6 @@ public class ProfileService {
         if (requestDto.getName() != null) {
             member.setName(requestDto.getName());
         }
-        if (requestDto.getStatus() != null) {
-            member.setStatus(requestDto.getStatus());
-        }
         if (requestDto.getBio() != null) {
             member.setBio(requestDto.getBio());
         }
