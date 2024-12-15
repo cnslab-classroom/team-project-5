@@ -50,7 +50,7 @@ public class SendPostSignUp {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "회원가입 성공: " + response.toString());
+                JOptionPane.showMessageDialog(null, "회원가입 성공");
                 return true;
             }
             else {

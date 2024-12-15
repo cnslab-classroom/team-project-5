@@ -74,7 +74,8 @@ public class PlanService {
                             .orElseThrow(() -> new BaseException(404, "오늘의 목표 상태가 없습니다."));
 
                     // DTO 반환
-                    return new PlanReadResponseDto(goal.getGoal_text(), todayGoalStatus.isGoal_status());
+                    return new PlanReadResponseDto(goal.getGoal_text(),
+                            todayGoalStatus.isGoal_status(), goal.getGoal_id());
                 })
                 .collect(Collectors.toList());
 
