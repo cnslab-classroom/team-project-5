@@ -63,6 +63,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Plan> plans = new ArrayList<>();
 
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Streak streak;
+
 
     public Member(AuthRequestDto authRequestDto, String icon) {
         this.name = authRequestDto.getName();

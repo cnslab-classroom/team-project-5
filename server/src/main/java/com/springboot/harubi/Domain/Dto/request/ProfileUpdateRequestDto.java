@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ProfileUpdateRequestDto {
     private String name;
     private String icon;
-    private Integer status;
     private String bio;
     private String affiliation;
 }
