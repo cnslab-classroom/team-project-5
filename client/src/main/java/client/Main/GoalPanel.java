@@ -4,6 +4,7 @@ package client.Main;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,21 +15,32 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import client.Main.fetchData.SendPostGoal;
 import client.Main.fetchData.SendPostSchedule;
 import client.Main.fetchData.SendPutGoal;
+import client.Main.fetchData.FetchGoalData;
+import client.Main.fetchData.FetchHome;
+import client.Main.fetchData.FetchHome.HomeData;
+import client.Main.model.Goal;
+import client.Main.model.Plan;
+
+import java.util.List;
 
 public class GoalPanel extends JPanel {
+    FetchHome.HomeData homeData = FetchHome.fetchHomeData();
+    private List<Goal> goals = FetchGoalData.fetchGoalData();
 
     public GoalPanel() {
+
         // 패널 설정
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
 
         // 오늘의 목표
-        JPanel goalSection1 = createGoalSection("오늘의 목표를 100% 달성했어요.", "완벽하네요! 💯", new Color(0, 128, 0));
+        JPanel goalSection1 = createGoalSection("오늘의 목표를 보여드릴게요.", "완벽하네요! 💯", new Color(0, 128, 0));
         add(goalSection1);
 
         // 다가오는 일정
@@ -85,7 +97,7 @@ public class GoalPanel extends JPanel {
 
         // 상단 패널을 컨테이너에 추가
         checklistContainer.add(topPanel);
-        checklistContainer.setMaximumSize(new Dimension(300, 200)); // 최대 크기 설정
+        checklistContainer.setMaximumSize(new Dimension(600, Integer.MAX_VALUE)); // 최대 크기 설정
 
         // 플러스 버튼과 체크리스트 사이의 간격
         checklistContainer.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -93,9 +105,17 @@ public class GoalPanel extends JPanel {
         // 체크리스트 패널 생성
         JPanel checklistPanel = new JPanel();
         checklistPanel.setBackground(new Color(240, 240, 240));
+        checklistPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
 
-        
+        for (Goal item : goals) {
+            JCheckBox goal = new JCheckBox(" " + item.getText());
+            goal.setBackground(new Color(240, 240, 240));
+            goal.setBorder(new EmptyBorder(5, 10, 0, 10));
+            goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            checklistPanel.add(goal);
+            System.out.println(item.getText());
+        }
 
         // 버튼 클릭 이벤트
         addButton.addActionListener(new ActionListener() {
@@ -166,7 +186,7 @@ public class GoalPanel extends JPanel {
 
         // 상단 패널을 컨테이너에 추가
         checklistContainer.add(topPanel);
-        checklistContainer.setMaximumSize(new Dimension(300, 200)); // 최대 크기 설정
+        checklistContainer.setMaximumSize(new Dimension(600, Integer.MAX_VALUE)); // 최대 크기 설정
 
         // 플러스 버튼과 체크리스트 사이의 간격
         checklistContainer.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -174,7 +194,20 @@ public class GoalPanel extends JPanel {
         // 체크리스트 패널 생성
         JPanel checklistPanel = new JPanel();
         checklistPanel.setBackground(new Color(240, 240, 240));
+        checklistPanel.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
         checklistPanel.setLayout(new BoxLayout(checklistPanel, BoxLayout.Y_AXIS)); // 세로 정렬
+
+        for (Plan item : homeData.getPlans()) {
+            JLabel goal = new JLabel(" " + item.getText());
+            goal.setBackground(new Color(240, 240, 240));
+            goal.setBorder(new EmptyBorder(5, 10, 0, 10));
+            goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            checklistPanel.add(goal);
+            System.out.println(item.getText());
+        }
+
+        checklistPanel.revalidate();
+        checklistPanel.repaint();
 
         // 버튼 클릭 이벤트
         addButton.addActionListener(new ActionListener() {
@@ -209,8 +242,10 @@ public class GoalPanel extends JPanel {
     private void showGoalInputDialog(JPanel checklistPanel) {
         String goalText = JOptionPane.showInputDialog(this, "추가할 목표를 입력하세요:", "목표 추가", JOptionPane.PLAIN_MESSAGE);
         if (goalText != null && !goalText.trim().isEmpty()) {
-            String startDate = JOptionPane.showInputDialog(this, "목표 시작 날짜를 입력하세요 (YYYY-MM-DD):", "목표 시작 날짜", JOptionPane.PLAIN_MESSAGE);
-            String endDate = JOptionPane.showInputDialog(this, "목표 종료 날짜를 입력하세요 (YYYY-MM-DD):", "목표 종료 날짜", JOptionPane.PLAIN_MESSAGE);
+            String startDate = JOptionPane.showInputDialog(this, "목표 시작 날짜를 입력하세요 (YYYY-MM-DD):", "목표 시작 날짜",
+                    JOptionPane.PLAIN_MESSAGE);
+            String endDate = JOptionPane.showInputDialog(this, "목표 종료 날짜를 입력하세요 (YYYY-MM-DD):", "목표 종료 날짜",
+                    JOptionPane.PLAIN_MESSAGE);
 
             if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
                 try {
@@ -219,7 +254,7 @@ public class GoalPanel extends JPanel {
 
                     // 새로운 체크박스 추가
                     JCheckBox newCheckBox = createCheckBox(goalText);
-                    newCheckBox.addActionListener(new ActionListener(){
+                    newCheckBox.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             // 체크박스 클릭 시 서버로 목표 체크 데이터 전송
@@ -247,7 +282,8 @@ public class GoalPanel extends JPanel {
     private void showScheduleInputDialog(JPanel checklistPanel) {
         String plan_text = JOptionPane.showInputDialog(this, "추가할 일정을 입력하세요:", "일정 추가", JOptionPane.PLAIN_MESSAGE);
         if (plan_text != null && !plan_text.trim().isEmpty()) {
-            String goal_date = JOptionPane.showInputDialog(this, "일정 시간을 입력하세요 (yyyy-MM-ddTHH:mm):", "일정 시간", JOptionPane.PLAIN_MESSAGE);
+            String goal_date = JOptionPane.showInputDialog(this, "일정 시간을 입력하세요 (yyyy-MM-ddTHH:mm):", "일정 시간",
+                    JOptionPane.PLAIN_MESSAGE);
 
             if (goal_date != null && !goal_date.trim().isEmpty()) {
                 try {

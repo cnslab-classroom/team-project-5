@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,6 +18,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import client.Main.fetchData.FetchGoalData;
 import client.Main.fetchData.FetchHome;
 import client.Main.fetchData.FetchHome.HomeData;
 import client.Main.model.Goal;
@@ -23,6 +26,7 @@ import client.Main.model.StudyItem;
 
 public class HomePanel extends JPanel {
     private HomeData homeData = FetchHome.fetchHomeData();
+    private List<Goal> goals = FetchGoalData.fetchGoalData();
     private Border outerBorder = new LineBorder(Color.GRAY, 2, true);
     private Border innerBorder = new EmptyBorder(0, 10, 0, 10);
 
@@ -99,9 +103,10 @@ public class HomePanel extends JPanel {
         // setMaximumSize 제거
         goalBox.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
-        for (Goal item : homeData.getGoals()) {
-            JCheckBox goal = new JCheckBox(" " + item.getText());
+        for (Goal item : goals) {
+            JLabel goal = new JLabel(" " + item.getText());
             goal.setBackground(new Color(240, 240, 240));
+            goal.setBorder(new EmptyBorder(5, 10, 0, 10));
             goal.setFont(new Font("Paperlogy", Font.PLAIN, 15));
             goalBox.add(goal);
             System.out.println(item.getText());
@@ -146,6 +151,8 @@ public class HomePanel extends JPanel {
             JLabel schedule = new JLabel(
                     homeData.getPlans().get(i).getText() + "  " + homeData.getPlans().get(i).getDate());
             schedule.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+            schedule.setBorder(new EmptyBorder(5, 10, 0, 10));
+            schedule.setBackground(new Color(240, 240, 240));
             scheduleBox.add(schedule);
         }
 
@@ -185,9 +192,14 @@ public class HomePanel extends JPanel {
         studyBox.setMaximumSize(new Dimension(600, Integer.MAX_VALUE));
 
         for (StudyItem item : homeData.getStudies()) {
-            JLabel study = new JLabel("📖 ~" + item.getDate() + "  " + item.getText());
-            study.setFont(new Font("Paperlogy", Font.PLAIN, 15));
-            studyBox.add(study);
+            if (item.getDate() != null && !item.getDate().isEmpty() &&
+                    item.getText() != null && !item.getText().isEmpty()) {
+                JLabel study = new JLabel("📖 ~" + item.getDate() + "  " + item.getText());
+                study.setBackground(new Color(240, 240, 240));
+                study.setBorder(new EmptyBorder(5, 10, 0, 10));
+                study.setFont(new Font("Paperlogy", Font.PLAIN, 15));
+                studyBox.add(study);
+            }
         }
 
         studyPanel.add(studyTitlePanel);

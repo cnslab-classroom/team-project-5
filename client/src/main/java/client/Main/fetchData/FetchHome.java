@@ -54,15 +54,28 @@ public class FetchHome {
       String nickname = extractValue(json, "nickname");
       homeData.setNickname(nickname);
 
-      // goals 배열 파싱
-      String goalsSection = json.split("\"goals\":\\[")[1].split("\\]")[0];
-      String[] goals = goalsSection.split("\\},\\{");
-      for (String goal : goals) {
-        String text = extractValue(goal, "goal_text");
-        String statusSection = goal.split("\"goalStatuses\":\\[")[1].split("\\]")[0];
-        boolean status = Boolean.parseBoolean(statusSection);
-        homeData.getGoals().add(new Goal(text, status));
-      }
+      // // "goals" 배열 파싱
+      // String goalsSection = json.split("\"goals\":\\[")[1].split("\\]")[0];
+      // String[] goals = goalsSection.split("\\},\\{");
+
+      // for (String goal : goals) {
+      // goal = goal.replace("{", "").replace("}", ""); // 중괄호 제거
+      // String text = extractValue(goal, "goal_text");
+
+      // // goalStatuses 배열 전체 값 가져오기
+      // String statusesSection =
+      // goal.split("\"goalStatuses\":\\[")[1].split("\\]")[0];
+      // String[] statusArray = statusesSection.split(",");
+
+      // // status 리스트 생성
+      // List<Boolean> statusList = new ArrayList<>();
+      // for (String status : statusArray) {
+      // statusList.add(Boolean.parseBoolean(status.trim()));
+      // }
+
+      // homeData.getGoals().add(new Goal(text, statusList));
+      // System.out.println("goal: " + text + " | statuses: " + statusList);
+      // }
 
       // plans 배열 파싱
       String plansSection = json.split("\"plans\":\\[")[1].split("\\]")[0];
@@ -108,7 +121,6 @@ public class FetchHome {
   // 데이터 클래스
   public static class HomeData {
     private String nickname;
-    private List<Goal> goals = new ArrayList<>();
     private List<Plan> plans = new ArrayList<>();
     private List<StudyItem> studies = new ArrayList<>();
     private Saying saying;
@@ -119,10 +131,6 @@ public class FetchHome {
 
     public void setNickname(String nickname) {
       this.nickname = nickname;
-    }
-
-    public List<Goal> getGoals() {
-      return goals;
     }
 
     public List<Plan> getPlans() {
