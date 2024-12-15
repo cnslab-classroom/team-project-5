@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PlanReadResponseDto {
     private String goal_text;
     private boolean goal_status;
+    private Long goal_id;
 }
