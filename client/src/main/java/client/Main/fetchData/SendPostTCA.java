@@ -52,7 +52,7 @@ public class SendPostTCA {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "동의 완료: " + response.toString());
+                JOptionPane.showMessageDialog(null, "동의 완료");
             } else {
                 JOptionPane.showMessageDialog(null, "예기치 않은 오류 발생: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }

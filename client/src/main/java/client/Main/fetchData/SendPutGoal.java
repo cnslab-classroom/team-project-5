@@ -54,7 +54,7 @@ public class SendPutGoal {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "목표 체크 성공: " + response.toString());
+                JOptionPane.showMessageDialog(null, "목표 체크 성공");
             } else {
                 JOptionPane.showMessageDialog(null, "목표 체크 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }
