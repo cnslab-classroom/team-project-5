@@ -32,16 +32,11 @@ public class ProfileService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID의 멤버를 찾을 수 없습니다."));
 
-        // 요청에서 넘어온 값만 업데이트
-        if (requestDto.getName() != null) {
-            member.setName(requestDto.getName());
-        }
-        if (requestDto.getBio() != null) {
-            member.setBio(requestDto.getBio());
-        }
-        if (requestDto.getAffiliation() != null) {
-            member.setAffiliation(requestDto.getAffiliation());
-        }
+        // 요청에서 넘어온 값만 업데이트, null이면 기존 값 유지
+        member.setName(requestDto.getName() != null ? requestDto.getName() : member.getName());
+        member.setBio(requestDto.getBio() != null ? requestDto.getBio() : member.getBio());
+        member.setAffiliation(requestDto.getAffiliation() != null ? requestDto.getAffiliation() : member.getAffiliation());
+        member.setIcon(requestDto.getIcon() != null ? requestDto.getIcon() : member.getIcon());
 
         // 수정된 엔티티 저장 (Transactional로 인해 자동 저장)
         memberRepository.save(member);
