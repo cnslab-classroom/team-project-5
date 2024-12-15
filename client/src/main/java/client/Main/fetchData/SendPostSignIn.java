@@ -55,7 +55,7 @@ public class SendPostSignIn {
 
                 // 서버 응답에서 member_id 추출
                 int memberId = parseMemberId(response.toString());
-                JOptionPane.showMessageDialog(null, "로그인 성공: 회원 ID " + memberId);
+                JOptionPane.showMessageDialog(null, "로그인 성공");
                 return memberId;
             } else {
                 JOptionPane.showMessageDialog(null, "로그인 실패: ", "오류", JOptionPane.ERROR_MESSAGE);

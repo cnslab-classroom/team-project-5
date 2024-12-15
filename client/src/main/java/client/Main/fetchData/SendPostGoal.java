@@ -54,12 +54,12 @@ public class SendPostGoal {
 
             // 응답 처리
             if (responseCode == 200) {
-                JOptionPane.showMessageDialog(null, "목표 추가 성공: " + response.toString());
+                JOptionPane.showMessageDialog(null, "목표 추가 성공");
             } else {
                 JOptionPane.showMessageDialog(null, "목표 추가 실패: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
             }
 
-            goal_id = parseGoalId(response.toString());
+            goal_id = parseGoalId(response.toString());     
 
         } catch (Exception e) {
             e.printStackTrace();

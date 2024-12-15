@@ -53,7 +53,7 @@ public class SendPostSchedule {
             if (responseCode == 200) {
                 // 성공 메시지 파싱
                 System.out.println("서버 응답: " + response.toString());
-                JOptionPane.showMessageDialog(null, "스케줄 추가 완료: " + response.toString());
+                JOptionPane.showMessageDialog(null, "스케줄 추가 완료");
             } else {
                 System.err.println("서버 응답: " + response.toString());
                 JOptionPane.showMessageDialog(null, "오류 발생: " + response.toString(), "오류", JOptionPane.ERROR_MESSAGE);
