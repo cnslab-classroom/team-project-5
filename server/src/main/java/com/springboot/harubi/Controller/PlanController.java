@@ -3,12 +3,18 @@ package com.springboot.harubi.Controller;
 import com.springboot.harubi.Common.BaseResponse;
 import com.springboot.harubi.Domain.Dto.request.PlanCheckRequestDto;
 import com.springboot.harubi.Domain.Dto.request.PlanWriteRequestDto;
+import com.springboot.harubi.Domain.Dto.request.ProfileUpdateRequestDto;
 import com.springboot.harubi.Domain.Dto.request.ScheduleWriteRequestDto;
 import com.springboot.harubi.Domain.Dto.response.*;
 import com.springboot.harubi.Service.PlanService;
+import com.springboot.harubi.Service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/plan")
@@ -29,10 +35,14 @@ public class PlanController {
         return new BaseResponse<>(HttpStatus.OK.value(), null, response);
     }
 
-    @PatchMapping("/{member_id}/daily")
-    public BaseResponse<PlanCheckResponseDto> checkTodayPlan(@PathVariable("member_id") Long member_id,
-                                                             @RequestBody PlanCheckRequestDto requestDto) {
+    @PutMapping("/{member_id}/daily")
+    public BaseResponse<PlanCheckResponseDto> checkTodayPlan(
+            @PathVariable("member_id") Long member_id,
+            @RequestBody PlanCheckRequestDto requestDto) {
+
+        // 서비스 호출
         PlanCheckResponseDto response = planService.checkPlans(member_id, requestDto);
+
         return new BaseResponse<>(HttpStatus.OK.value(), "목표 상태가 업데이트 되었습니다.", response);
     }
 

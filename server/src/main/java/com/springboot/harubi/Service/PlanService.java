@@ -108,12 +108,17 @@ public class PlanService {
                 .findFirst()
                 .orElseThrow(() -> new BaseException(404, "오늘 날짜의 상태를 찾을 수 없습니다."));
 
-        // 상태 업데이트
-        dateStatus.setGoal_status(planCheckRequestDto.isPlan_status());
+        // 기존 정보 유지, 새로운 상태만 업데이트
+        if (planCheckRequestDto.getPlan_status() != null) {
+            dateStatus.setGoal_status(planCheckRequestDto.getPlan_status());
+        }
+
+        // 저장
         goalDateStatusRepository.save(dateStatus);
 
         return new PlanCheckResponseDto(dateStatus.getStatus_id());
     }
+
 
     private Date getTodayDate() {
         Calendar cal = Calendar.getInstance();
