@@ -8,7 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class ProfileResponseDto {
     private String name;
-    private Integer status;
     private String icon;
     private String bio;
     private String affiliation;
@@ -16,7 +15,6 @@ public class ProfileResponseDto {
     public static ProfileResponseDto fromEntity(Member member) {
         return new ProfileResponseDto(
                 member.getName(),
-                member.getStatus(),
                 member.getIcon(),
                 member.getBio(),
                 member.getAffiliation()
